@@ -6,6 +6,6 @@ namespace AuthWebApplication.Utilities
     public interface IJwtFactory
     {
         Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity);
-        ClaimsIdentity GenerateClaimsIdentity(string userName, string id, string shopId, string roleId);
+        ClaimsIdentity GenerateClaimsIdentity(string userName, string id, string roleId);
     }
 }

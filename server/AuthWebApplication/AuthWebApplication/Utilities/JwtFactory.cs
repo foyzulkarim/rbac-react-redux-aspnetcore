@@ -103,14 +103,12 @@ namespace AuthWebApplication.Utilities
             return encodedJwt;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id, string shopId, string roleId)
+        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id,  string roleId)
         {
             return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
             {
                 new Claim(Constants.Strings.JwtClaimIdentifiers.Id, id),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.UserName, userName),
-                new Claim(Constants.Strings.JwtClaimIdentifiers.ShopId, shopId),
-                new Claim(Constants.Strings.JwtClaimIdentifiers.RoleId, roleId),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.Rol,
                     Constants.Strings.JwtClaims.ApiAccess)
             });

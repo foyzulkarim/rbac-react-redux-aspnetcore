@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthWebApplication.Models;
 using AuthWebApplication.Models.Db;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace AuthWebApplication.Utilities
@@ -14,21 +15,16 @@ namespace AuthWebApplication.Utilities
             JwtIssuerOptions jwtOptions, ApplicationUser user, List<dynamic> roles,
             JsonSerializerSettings serializerSettings, SecurityDbContext db)
         {
-            string roleId = identity.Claims.Single(c => c.Type == "roleId").Value;
+           // string roleId = identity.Claims.Single(c => c.Type == "roleId").Value;
             string id = identity.Claims.Single(c => c.Type == "id").Value;
             var name = user.FirstName + " " + user.LastName;
             string token = await jwtFactory.GenerateEncodedToken(user.UserName, identity);
-            //string warehouseId = "";
-            //if (employee != null)
-            //{
-            //    warehouseId = !string.IsNullOrWhiteSpace(employee.WarehouseId) ? employee.WarehouseId : "";
-            //}
 
-            IQueryable<ApplicationPermission> permissions = db.Permissions.Where(x => x.RoleId == roleId && x.IsAllowed);
-            var resources =
-                permissions.Select(x => new { name = x.Resource.Name, isAllowed = x.IsAllowed, isDisabled = x.IsDisabled })
-                    .ToList();
-            string allowedResources = JsonConvert.SerializeObject(resources);
+            //IQueryable<ApplicationPermission> permissions = db.Permissions.Where(x => x.RoleId == roleId && x.IsAllowed);
+            //var resources =
+            //    permissions.Select(x => new { name = x.Resource.Name, isAllowed = x.IsAllowed, isDisabled = x.IsDisabled })
+            //        .ToList();
+            // string allowedResources = JsonConvert.SerializeObject(resources);
 
             var response = new
             {
@@ -36,15 +32,13 @@ namespace AuthWebApplication.Utilities
                 name = name,
                 userName = user.UserName,
                 role = user.RoleName,
-                roleId = roleId,
-                shopId = user.ShopId,
-                resources = allowedResources,
+                //roleId = roleId,
+                //resources = allowedResources,
                 access_token = token,
                 expires_in = (int)jwtOptions.ValidFor.TotalSeconds,
                 token_type = "bearer"
             };
             return response;
-            // return JsonConvert.SerializeObject(response, serializerSettings);
         }
     }
 }

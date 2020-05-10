@@ -14,8 +14,5 @@ namespace AuthWebApplication.Models
 
         [Column(TypeName = "varchar(32)")]
         public string DefaultRoute { get; set; }
-
-        [Column(TypeName = "varchar(128)")]
-        public string ShopId { get; set; }
     }
 }

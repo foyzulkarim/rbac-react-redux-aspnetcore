@@ -17,7 +17,13 @@ namespace AuthWebApplication.Controllers
     {
         private UserManager<ApplicationUser> userManager;
 
+        public UserController(UserManager<ApplicationUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
         [AllowAnonymous]
+        [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterBindingModel model)
         {
@@ -40,7 +46,7 @@ namespace AuthWebApplication.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.Phone,
-                ShopId = model.ShopId
+                IsActive = true,
             };
 
             IdentityResult result = await userManager.CreateAsync(user, model.Password);

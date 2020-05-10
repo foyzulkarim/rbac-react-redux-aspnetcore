@@ -38,7 +38,6 @@ namespace AuthWebApplication.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("token")]
         public async Task<ActionResult> Post([FromBody] LoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
@@ -70,10 +69,10 @@ namespace AuthWebApplication.Controllers
             }
 
             List<dynamic> roles = new List<dynamic> { };
-            foreach (var r in securityDb.ApplicationRoles.Select(x => new { x.Id, x.Name }).ToList())
-            {
-                roles.Add(r);
-            }
+            //foreach (var r in securityDb.ApplicationRoles.Select(x => new { x.Id, x.Name }).ToList())
+            //{
+            //    roles.Add(r);
+            //}
 
             var jwt = await Tokens.GenerateJwt(
                 identity,
@@ -98,7 +97,7 @@ namespace AuthWebApplication.Controllers
             if (await userManager.CheckPasswordAsync(userToVerify, password))
             {
                 ClaimsIdentity identity =
-                    jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id, userToVerify.ShopId, userToVerify.RoleId);
+                    jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id,  userToVerify.RoleId);
                 ClaimsIdentity claimsIdentity = await Task.FromResult(identity);
 
                 return claimsIdentity;

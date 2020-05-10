@@ -7,7 +7,7 @@ namespace AuthWebApplication.Utilities
         {
             public static class JwtClaimIdentifiers
             {
-                public const string Rol = "rol", Id = "id", UserName = "username", ShopId = "shopId", RoleId = "roleId";
+                public const string Rol = "rol", Id = "id", UserName = "username", RoleId = "roleId";
             }
 
             public static class JwtClaims

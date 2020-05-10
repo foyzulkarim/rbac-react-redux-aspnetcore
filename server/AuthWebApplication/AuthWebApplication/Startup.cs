@@ -1,20 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using AuthWebApplication.Models.Db;
+using AuthWebApplication.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AuthWebApplication
 {
     public class Startup
     {
+        const string BizBook365Com = "bizbook365.com";
+        private const string SecretKey = "tsKTyBHgEMjBKPcjuYhWWzQdRt1XND0q";
+        private readonly SymmetricSecurityKey SigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,6 +34,13 @@ namespace AuthWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<SecurityDbContext>(options =>
+                options.UseSqlServer(connectionString));
+            services.AddSingleton<IJwtFactory, JwtFactory>();
+            services.AddCors();
+            services.AddTokenGeneration(BizBook365Com, BizBook365Com, SigningKey);
+            services.AddIdentityBuilder<SecurityDbContext>();
             services.AddControllers();
         }
 
@@ -36,10 +52,12 @@ namespace AuthWebApplication
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

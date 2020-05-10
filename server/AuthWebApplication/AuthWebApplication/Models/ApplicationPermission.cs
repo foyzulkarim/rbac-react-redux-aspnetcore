@@ -26,9 +26,6 @@ namespace AuthWebApplication.Models
 
         public bool IsDisabled { get; set; }
 
-        [Column(TypeName = "varchar(128)")]
-        public string ShopId { get; set; }
-
         [ForeignKey("ResourceId")]
         public virtual ApplicationResource Resource { get; set; }
 
