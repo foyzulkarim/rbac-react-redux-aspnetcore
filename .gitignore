@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+/.vs
+/server/AuthWebApplication/.vs/AuthWebApplication
+/server/AuthWebApplication/AuthWebApplication/bin/Debug/netcoreapp3.1
+/server/AuthWebApplication/AuthWebApplication/obj
+*.user
