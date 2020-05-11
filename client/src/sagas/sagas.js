@@ -1,5 +1,6 @@
 import { call, put, takeEvery, all } from "redux-saga/effects";
 import * as api from './api';
+import { Constants } from "../constants";
 
 export function* addPost({ payload }) {
     try {
@@ -92,16 +93,16 @@ export function* fetchComments({ payload }) {
     }
 }
 
-function* watchFetchComments() {   
+function* watchFetchComments() {
     yield takeEvery('FETCH_COMMENTS', fetchComments);
 }
 
 export function* login({ payload }) {
     try {
         let output = yield call(api.login, payload);
-        yield put({ type: 'LOGIN_REQUEST_SUCCESS', payload: output });       
+        yield put({ type: 'LOGIN_REQUEST_SUCCESS', payload: output });
     } catch (error) {
-        console.log('fetch posts error', error);
+        console.log('login error', error);
     }
 }
 
@@ -109,7 +110,30 @@ function* watchLogin() {
     yield takeEvery('LOGIN_REQUEST', login);
 }
 
+export function* register({ payload }) {
+    try {
+        let output = yield call(api.register, payload);
+        yield put({ type: Constants.REGISTER_SUCCESS, payload: output });
+    } catch (error) {
+        console.log('register error', error);
+    }
+}
 
-export default function* rootSaga() {    
-    yield all([watchAddPost(), watchEditPost(), watchDeletePost(), watchFetchPosts(), watchFetchPostDetail(), watchAddComment(), watchFetchComments(), watchLogin()]);
+function* watchRegister() {
+    yield takeEvery(Constants.REGISTER_REQUEST, register);
+}
+
+
+export default function* rootSaga() {
+    yield all([
+        watchAddPost(),
+        watchEditPost(),
+        watchDeletePost(),
+        watchFetchPosts(),
+        watchFetchPostDetail(),
+        watchAddComment(),
+        watchFetchComments(),
+        watchLogin(),
+        watchRegister()
+    ]);
 };

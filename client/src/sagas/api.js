@@ -68,3 +68,8 @@ export const login = (data) => {
     console.log("login api call ->", data);
     return axios.post(`${AuthUrl}/api/token`, data);
 }
+
+export const register = (data) => {
+    console.log("register api call ->", data);
+    return axios.post(`${AuthUrl}/api/user/register`, data);
+}

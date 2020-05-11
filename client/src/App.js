@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect, useRouteMatch, 
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { PostDetail, PostCreate, PostEdit, PostDelete, Posts, Home } from "./components/Posts";
-import { Login } from "./components/Login2";
+import { Login } from "./components/Login";
+import { Register } from "./components/Register";
 import { Constants } from "./constants";
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -39,11 +40,20 @@ export const Navigation = () => {
     history.push('/login');
   }
 
+  let register = () => {
+    history.push('/register');
+  }
+
   return (
     <>
       <h3>hello {userContext.user.username}</h3>
       {userContext.isAuthenticated && <button onClick={logOut}>Log Out</button>}
-      {!userContext.isAuthenticated && <button onClick={login}>Login</button>}
+      {!userContext.isAuthenticated &&
+        <>
+          <button onClick={login}>Login</button> <br />
+          <button onClick={register}>Register</button>
+        </>
+      }
     </>
   );
 
@@ -86,6 +96,7 @@ const App = () => {
                 <PrivateRoute path="/post-delete/:id" component={PostDelete}></PrivateRoute>
                 <PrivateRoute path="/posts" component={Posts}></PrivateRoute>
                 <Route path="/login" component={Login}></Route>
+                <Route path="/register" component={Register}></Route>
                 <Route path="/"><Home /></Route>
               </Switch>
             </div>
