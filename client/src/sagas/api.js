@@ -1,10 +1,35 @@
 import axios from 'axios';
-// const BaseUrl = 'http://localhost:61361/api';
-const BaseUrl = 'http://feli-api.azurewebsites.net/api';
-const AuthUrl = 'http://localhost:5000'
+
+const BaseUrl = 'http://localhost:5005/api';
+const AuthUrl = 'http://localhost:5000';
+
+
+axios.interceptors.request.use(function (config) {
+    let localStorageData = localStorage.getItem('data');
+    if (localStorageData) {
+        localStorageData = JSON.parse(localStorageData);
+        let token = 'Bearer ' + localStorageData.access_token;
+        config.headers.Authorization = token;
+    }
+    console.log(config);
+    return config;
+});
+
+
+axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (error.response.status === 401) {
+        localStorage.removeItem('data');
+        window.location = '/login';
+    } else {
+        return Promise.reject(error);
+    }
+});
 
 export const getPosts = () => {
     console.log("getPosts api call.");
+    console.log(axios.defaults);
     return axios.get(`${BaseUrl}/posts`);
 }
 
