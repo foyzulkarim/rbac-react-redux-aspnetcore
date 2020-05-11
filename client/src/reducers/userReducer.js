@@ -26,7 +26,6 @@ export default (state = initialState, action) => {
             };
         default:
             let localStorageData = localStorage.getItem('data');
-            console.log('localStorageData', localStorageData);
             if (localStorageData) {
                 localStorageData = JSON.parse(localStorageData);
                 return {

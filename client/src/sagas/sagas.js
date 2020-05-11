@@ -7,7 +7,7 @@ export function* addPost({ payload }) {
         yield put({ type: 'ADD_POST_SUCCESS', payload: output });
         yield put({ type: 'FETCH_POSTS' });
     } catch (error) {
-        console.log('fetch posts error', error);
+        console.log('addPost error', error);
     }
 }
 
@@ -21,7 +21,7 @@ export function* editPost({ payload }) {
         yield put({ type: 'EDIT_POST_SUCCESS', payload: output });
         yield put({ type: 'FETCH_POSTS' });
     } catch (error) {
-        console.log('fetch posts error', error);
+        console.log('editPost error', error);
     }
 }
 
@@ -35,7 +35,7 @@ export function* deletePost({ payload }) {
         yield put({ type: 'DELETE_POST_SUCCESS', payload: output });
         yield put({ type: 'FETCH_POSTS' });
     } catch (error) {
-        console.log('fetch posts error', error);
+        console.log('deletePost error', error);
     }
 }
 
