@@ -104,7 +104,7 @@ dist
 .tern-port
 /.vs
 /server/AuthWebApplication/.vs/AuthWebApplication
-/server/AuthWebApplication/AuthWebApplication/bin/Debug/netcoreapp3.1
+/server/AuthWebApplication/AuthWebApplication/bin
 /server/AuthWebApplication/AuthWebApplication/obj
 *.user
 /server/WebApplication2/WebApplication2/bin
