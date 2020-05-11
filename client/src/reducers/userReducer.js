@@ -2,8 +2,10 @@ import { Constants } from "../constants";
 
 const initialState = {
     isAuthenticated: false,
-    user: {},
-    token: '',
+    user: null,
+    token: null,
+    isRegistered: false,
+    error: null,
 }
 
 export default (state = initialState, action) => {
@@ -24,8 +26,26 @@ export default (state = initialState, action) => {
                 user: initialState.user,
                 token: initialState.token,
             };
+        // case Constants.REGISTER_REQUEST:
+        //     return {
+        //         ...state,
+        //         isRegistered: initialState.isRegistered,
+        //         error: initialState.error,
+        //     };
         case Constants.REGISTER_SUCCESS:
-            return state;
+            console.log('REGISTER_SUCCESS', action.payload);
+            return {
+                ...state,
+                isRegistered: true,
+            };
+        case Constants.REGISTER_FAILURE:
+            const error = action.payload;
+            let message = JSON.stringify(error.data);
+            return {
+                ...state,
+                isRegistered: false,
+                error: { status: error.status, message: message }
+            };
         default:
             let localStorageData = localStorage.getItem('data');
             if (localStorageData) {

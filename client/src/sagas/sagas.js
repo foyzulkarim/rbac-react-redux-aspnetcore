@@ -116,6 +116,7 @@ export function* register({ payload }) {
         yield put({ type: Constants.REGISTER_SUCCESS, payload: output });
     } catch (error) {
         console.log('register error', error);
+        yield put({ type: Constants.REGISTER_FAILURE, payload: error });
     }
 }
 

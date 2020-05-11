@@ -13,14 +13,13 @@ export const Register = () => {
         dispatch({
             type: Constants.REGISTER_REQUEST, payload: data
         });
-        history.push('/');
     }
 
     const onSubmit = data => {
-        if (data.password!=data.confirmpassword) {
+        if (data.password != data.confirmpassword) {
             setError("password", "notMatch", "Password and Confirm Password are mismatched");
             return;
-        }        
+        }
 
         submitData(data);
     };
@@ -29,10 +28,27 @@ export const Register = () => {
         return state.userContext;
     });
 
-    return (userContext.isAuthenticated) ? <Redirect to={{ pathname: '/' }} /> :
+    let shouldRedirect = userContext.isAuthenticated || userContext.isRegistered;
+    if (userContext.isRegistered) {
+        history.push('/');
+    }
+
+    if (!userContext.isRegistered && userContext.error) {
+        console.log(userContext.error);
+    }
+
+    return (shouldRedirect) ? <Redirect to={{ pathname: '/' }} /> :
         <>
             <div className="col-md-6 col-md-offset-3">
                 <h2>Login</h2>
+                {userContext.error &&
+                    <div className="alert alert-danger  alert-dismissible fade show" role="alert">
+                        {userContext.error.message}
+                        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
                 <form name="form" onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
                         <label htmlFor="email">Email</label>

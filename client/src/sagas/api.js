@@ -22,8 +22,8 @@ axios.interceptors.response.use(function (response) {
     if (error.response.status === 401) {
         localStorage.removeItem('data');
         window.location = '/login';
-    } else {
-        return Promise.reject(error);
+    } else {       
+        return Promise.reject(error.response);
     }
 });
 

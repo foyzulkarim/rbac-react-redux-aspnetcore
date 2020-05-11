@@ -46,7 +46,7 @@ export const Navigation = () => {
 
   return (
     <>
-      <h3>hello {userContext.user.username}</h3>
+      <h3>hello {userContext.user && <><span>{userContext.user.username}</span></>}</h3>
       {userContext.isAuthenticated && <button onClick={logOut}>Log Out</button>}
       {!userContext.isAuthenticated &&
         <>
@@ -56,7 +56,6 @@ export const Navigation = () => {
       }
     </>
   );
-
 }
 
 
