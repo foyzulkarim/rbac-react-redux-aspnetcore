@@ -55,7 +55,8 @@ http://localhost:3000/
 ```
 
 
-
+### How to run video
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/ToEO8INViW8/0.jpg)](http://www.youtube.com/watch?v=ToEO8INViW8 "React Redux JWT Authentication using ASP.NET Core API")
 
 ### Todos
  - Write tests
