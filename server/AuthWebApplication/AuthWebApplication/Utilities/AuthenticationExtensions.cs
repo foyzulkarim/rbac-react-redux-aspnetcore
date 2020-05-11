@@ -12,9 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AuthWebApplication.Utilities
 {
-    public static class AuthenticationConfigurationServiceExtensions
+    public static class AuthenticationExtensions
     {
-        public static void AddTokenGeneration(this IServiceCollection services, string issuer, string audience, SecurityKey signingKey)
+        public static void AddTokenValidation(this IServiceCollection services, string issuer, string audience, SecurityKey signingKey)
         {
             services.Configure<JwtIssuerOptions>(options =>
             {

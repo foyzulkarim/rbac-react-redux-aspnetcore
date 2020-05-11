@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AuthWebApplication.Models.Db;
-using AuthWebApplication.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using WebApplication2.Models;
+using WebApplication2.Services;
+using WebApplication2.Utilities;
 
-namespace AuthWebApplication
+namespace WebApplication2
 {
     public class Startup
     {
@@ -35,13 +35,23 @@ namespace AuthWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<SecurityDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.AddCors(x=>x.AddPolicy("all", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            // requires using Microsoft.Extensions.Options
+            services.Configure<BookstoreDatabaseSettings>(
+                Configuration.GetSection(nameof(BookstoreDatabaseSettings)));
+
+            services.AddSingleton<IBookstoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<BookstoreDatabaseSettings>>().Value);
+
+            services.AddCors(action =>
+            {
+                action.AddPolicy("all", builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                });
+            });
+
+            services.AddSingleton<PostService>();
             services.AddTokenValidation(BizBook365Com, BizBook365Com, SigningKey);
-            services.AddIdentityBuilder<SecurityDbContext>();
             services.AddControllers();
         }
 
@@ -53,13 +63,8 @@ namespace AuthWebApplication
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
-            // app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            app.UseCors("all");
-
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+            app.UseCors("all");
             app.UseAuthentication();
             app.UseAuthorization();
 
