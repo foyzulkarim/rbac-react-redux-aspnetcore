@@ -1,87 +1,48 @@
-import React, { Component } from 'react';
-import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
-import { Constants } from '../constants';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import { useForm } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
+import { Constants } from "../constants";
 
-class Login extends Component {
+export const Login = () => {
+    let history = useHistory();
+    let dispatch = useDispatch();
+    const { register, handleSubmit, watch, errors } = useForm();
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            submitted: false,
-        }
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    let submitData = (data) => {
+        dispatch({
+            type: Constants.LOGIN_REQUEST, payload: data
+        })
+        history.push('/');
     }
 
-    handlechange = (e) => {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });
-    }
+    const onSubmit = data => {
+        submitData(data);
+    };
 
-    handleSubmit(e) {
-        e.preventDefault();
-        this.setState({ submitted: true });
-        const { history } = this.props;
-        const { username, password } = this.state;
-        const { dispatch } = this.props;
-        if (username && password) {
-            dispatch({
-                type: Constants.LOGIN_REQUEST, payload: { username, password }
-            });
+    const userContext = useSelector(state => {
+        return state.userContext;
+    });
 
-            history.push('/');
-        }
-    }
-
-    render() {
-        const { loggingIn } = this.props;
-        const { username, password, submitted } = this.state;
-        return (
+    return (userContext.isAuthenticated) ? <Redirect to={{ pathname: '/' }} /> :
+        <>
             <div className="col-md-6 col-md-offset-3">
-                <div className="alert alert-info">
-                    Username: test<br />
-                    Password: test
-                </div>
                 <h2>Login</h2>
-                <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
+                <form name="form" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="form-group">
                         <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
-                        {submitted && !username &&
-                            <div className="help-block">Username is required</div>
-                        }
+                        <input type="text" className="form-control" name="username" ref={register({ required: true })} />
+                        <span>{errors.username && 'Username is required'}</span>
                     </div>
-                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+                    <div className='form-group'>
                         <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-                        {submitted && !password &&
-                            <div className="help-block">Password is required</div>
-                        }
+                        <input type="password" className="form-control" name="password" ref={register({ required: true })} />
+                        <span>{errors.password && 'Password is required'}</span>
                     </div>
                     <div className="form-group">
-                        <button className="btn btn-primary">Login</button>
-                        {loggingIn &&
-                            <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        }
+                        <input type="submit" className="btn btn-primary" />
                     </div>
                 </form>
             </div>
-        );
-    }
-
-}
-
-function mapStateToProps(state) {
-    const { loggingIn } = state.authentication;
-    return {
-        loggingIn
-    };
-}
-
-const connectedLoginPage = connect(mapStateToProps)(Login);
-export { connectedLoginPage as LoginObs }; 
+        </>;
+};

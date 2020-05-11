@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react';
-//import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useRouteMatch, useParams, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { Constants } from "../constants";
 
-export const Login = () => {
+export const Register = () => {
     let history = useHistory();
     let dispatch = useDispatch();
-    const { register, handleSubmit, watch, errors } = useForm();
+    const { register, handleSubmit, watch, errors, setError } = useForm();
 
     let submitData = (data) => {
         dispatch({
-            type: Constants.LOGIN_REQUEST, payload: data
-        })
+            type: Constants.REGISTER_REQUEST, payload: data
+        });
         history.push('/');
     }
 
     const onSubmit = data => {
+        if (data.password!=data.confirmpassword) {
+            setError("password", "notMatch", "Password and Confirm Password are mismatched");
+            return;
+        }        
+
         submitData(data);
     };
 
@@ -31,14 +35,24 @@ export const Login = () => {
                 <h2>Login</h2>
                 <form name="form" onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control" name="username" ref={register({ required: true })} />
-                        <span>{errors.username && 'Username is required'}</span>
+                        <label htmlFor="email">Email</label>
+                        <input type="text" className="form-control" name="email" ref={register({ required: true })} />
+                        <span>{errors.email && 'Email is required'}</span>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="phone">Phone</label>
+                        <input type="text" className="form-control" name="phone" ref={register({ required: true })} />
+                        <span>{errors.phone && 'Phone is required'}</span>
                     </div>
                     <div className='form-group'>
                         <label htmlFor="password">Password</label>
                         <input type="password" className="form-control" name="password" ref={register({ required: true })} />
-                        <span>{errors.password && 'Password is required'}</span>
+                        <span>{errors.password && <p>{errors.password.message}</p>}</span>
+                    </div>
+                    <div className='form-group'>
+                        <label htmlFor="confirmpassword">Confirm password</label>
+                        <input type="password" className="form-control" name="confirmpassword" ref={register({ required: true })} />
+                        <span>{errors.confirmpassword && 'Confirm password is required'}</span>
                     </div>
                     <div className="form-group">
                         <input type="submit" className="btn btn-primary" />

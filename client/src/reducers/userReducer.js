@@ -24,6 +24,8 @@ export default (state = initialState, action) => {
                 user: initialState.user,
                 token: initialState.token,
             };
+        case Constants.REGISTER_SUCCESS:
+            return state;
         default:
             let localStorageData = localStorage.getItem('data');
             if (localStorageData) {
