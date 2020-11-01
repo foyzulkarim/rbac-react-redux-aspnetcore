@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BizBook.Common.Library.EntityFrameworkCore;
@@ -7,15 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthWebApplication.Models
 {
-    [Table("AspNetResources")]
-    public class ApplicationResource : IIndex
+    [Table("AspNetTenants")]
+    public class ApplicationTenant : IIndex
     {
-        public ApplicationResource()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
-        [Key]
+        [IsIndex]
         [Column(TypeName = "varchar(64)")]
         [MaxLength(64)]
         public string Id { get; set; }
@@ -24,16 +18,17 @@ namespace AuthWebApplication.Models
         [Column(TypeName = "varchar(64)")]
         [MaxLength(64)]
         public string Name { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
 
-        public bool IsPublic { get; set; }
+        [IsIndex]
+        public DateTime ExpiryDate { get; set; }
 
-        public ResourceType ResourceType { get; set; }
-
-        public virtual ICollection<ApplicationPermission> Permissions { get; set; }
+        public bool IsActive { get; set; }
 
         public void BuildIndices(ModelBuilder builder)
         {
-            builder.BuildIndex<ApplicationResource>();
+            builder.BuildIndex<ApplicationTenant>();
         }
     }
 }

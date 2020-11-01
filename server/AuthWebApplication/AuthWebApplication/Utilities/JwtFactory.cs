@@ -51,7 +51,7 @@ namespace AuthWebApplication.Utilities
             return encodedJwt;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id,  string roleId)
+        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
         {
             return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
             {

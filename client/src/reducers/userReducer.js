@@ -6,6 +6,8 @@ const initialState = {
     token: null,
     isRegistered: false,
     error: null,
+    role: null,
+    resources: null
 }
 
 export default (state = initialState, action) => {
@@ -18,6 +20,7 @@ export default (state = initialState, action) => {
                 isAuthenticated: true,
                 user: { username: data.userName },
                 token: data.access_token,
+                role: data.role
             };
         case Constants.LOGOUT_REQUEST:
             localStorage.removeItem('data');
@@ -26,12 +29,11 @@ export default (state = initialState, action) => {
                 user: initialState.user,
                 token: initialState.token,
             };
-        // case Constants.REGISTER_REQUEST:
-        //     return {
-        //         ...state,
-        //         isRegistered: initialState.isRegistered,
-        //         error: initialState.error,
-        //     };
+        case Constants.PERMISSION_SUCCESS:
+            return {
+                ...state,
+                resources: data.resources
+            };
         case Constants.REGISTER_SUCCESS:
             console.log('REGISTER_SUCCESS', action.payload);
             return {

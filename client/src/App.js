@@ -7,6 +7,7 @@ import { PostDetail, PostCreate, PostEdit, PostDelete, Posts, Home } from "./com
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Constants } from "./constants";
+import { usePermission, checkPermission } from "./hooks/usePermission.js";
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
 
@@ -14,9 +15,19 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     return state.userContext;
   });
 
+  const isOk = () => {
+    const ok = userContext.isAuthenticated;
+    console.log('isOk', ok);
+    return ok;
+  };
+
+  const isAllowed = checkPermission(Component.name, userContext);
+
+  console.log('isAllowed', isAllowed);
+
   return (
     <Route {...rest} render={props => {
-      return (userContext.isAuthenticated)
+      return (isAllowed)
         ? <Component {...props} />
         : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
     }} />

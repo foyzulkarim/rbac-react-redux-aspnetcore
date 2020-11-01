@@ -15,13 +15,13 @@ namespace AuthWebApplication.Utilities
             JwtIssuerOptions jwtOptions, ApplicationUser user, List<dynamic> roles,
             JsonSerializerSettings serializerSettings, SecurityDbContext db)
         {
-           // string roleId = identity.Claims.Single(c => c.Type == "roleId").Value;
+            // string roleId = identity.Claims.Single(c => c.Type == "roleId").Value;
             string id = identity.Claims.Single(c => c.Type == "id").Value;
             var name = user.FirstName + " " + user.LastName;
             string token = await jwtFactory.GenerateEncodedToken(user.UserName, identity);
 
-            //IQueryable<ApplicationPermission> permissions = db.Permissions.Where(x => x.RoleId == roleId && x.IsAllowed);
-            //var resources =
+            // IQueryable<ApplicationPermission> permissions = db.Permissions.Where(x => x.RoleId == roleId && x.IsAllowed);
+            // var resources =
             //    permissions.Select(x => new { name = x.Resource.Name, isAllowed = x.IsAllowed, isDisabled = x.IsDisabled })
             //        .ToList();
             // string allowedResources = JsonConvert.SerializeObject(resources);
@@ -31,9 +31,10 @@ namespace AuthWebApplication.Utilities
                 id = id,
                 name = name,
                 userName = user.UserName,
-                role = user.RoleName,
+                //role = user.RoleName,
                 //roleId = roleId,
                 //resources = allowedResources,
+                roles = roles,
                 access_token = token,
                 expires_in = (int)jwtOptions.ValidFor.TotalSeconds,
                 token_type = "bearer"
