@@ -8,6 +8,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Constants } from "./constants";
 import { usePermission, checkPermission } from "./hooks/usePermission.js";
+import Basic from "./components/resources";
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
 
@@ -15,15 +16,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     return state.userContext;
   });
 
-  const isOk = () => {
-    const ok = userContext.isAuthenticated;
-    console.log('isOk', ok);
-    return ok;
-  };
-
   const isAllowed = checkPermission(Component.name, userContext);
-
-  console.log('isAllowed', isAllowed);
 
   return (
     <Route {...rest} render={props => {
@@ -90,6 +83,9 @@ const App = () => {
                   <Link to="/post-create" className="list-group-item list-group-item-action bg-light">Create Post</Link>
                 </>
               }
+              <>
+                <Link to="/basic" className="list-group-item list-group-item-action bg-light">Basic</Link>
+              </>
             </div>
           </div>
 
@@ -98,7 +94,7 @@ const App = () => {
               <Navigation />
             </nav>
 
-            <div className="container-fluid">
+            <div className="container">
               <Switch>
                 <PrivateRoute path="/post-detail/:id" component={PostDetail}></PrivateRoute>
                 <PrivateRoute path="/post-create" component={PostCreate}></PrivateRoute>
@@ -107,6 +103,7 @@ const App = () => {
                 <PrivateRoute path="/posts" component={Posts}></PrivateRoute>
                 <Route path="/login" component={Login}></Route>
                 <Route path="/register" component={Register}></Route>
+                <Route path="/basic" component={Basic}></Route>
                 <Route path="/"><Home /></Route>
               </Switch>
             </div>

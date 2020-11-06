@@ -73,3 +73,9 @@ export const register = (data) => {
     console.log("register api call ->", data);
     return axios.post(`${AuthUrl}/api/user/register`, data);
 }
+
+
+export const createResource = (data) => {
+    console.log("createResource api call ->", data);
+    return axios.post(`${AuthUrl}/api/ApplicationResources`, data);
+}

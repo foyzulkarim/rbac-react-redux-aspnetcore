@@ -82,7 +82,7 @@ namespace AuthWebApplication.Models.Db
                 }
             }
         }
-
+        
         public static void Initialize(SecurityDbContext context, UserManager<ApplicationUser> userManager, string password, ILogger<DbInitializer> dbInitializerLogger)
         {
             CreateRole(context, dbInitializerLogger, SuperAdmin);

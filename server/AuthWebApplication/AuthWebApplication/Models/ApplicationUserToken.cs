@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthWebApplication.Models
 {
-    public class ApplicationUserRole : IdentityUserRole<string>, IIndex
+    public class ApplicationUserToken : IdentityUserToken<string>, IIndex
     {
         [Column(TypeName = "varchar(64)")]
         [MaxLength(64)]
@@ -15,15 +15,9 @@ namespace AuthWebApplication.Models
         [ForeignKey("TenantId")]
         public virtual ApplicationTenant Tenant { get; set; }
 
-        [NotMapped]
-        public virtual ApplicationUser User { get; set; }
-
-        [NotMapped]
-        public virtual ApplicationRole Role { get; set; }
-
         public void BuildIndices(ModelBuilder builder)
         {
-            builder.BuildIndex<ApplicationUserRole>();
+            builder.BuildIndex<ApplicationUserToken>();
         }
     }
 }

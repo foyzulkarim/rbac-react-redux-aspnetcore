@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -68,20 +69,24 @@ namespace AuthWebApplication.Controllers
                 return BadRequest("User is Deactivated");
             }
 
-            List<dynamic> roles = new List<dynamic> { };
-            foreach (var r in securityDb.ApplicationRoles.Select(x => new { x.Id, x.Name }).ToList())
-            {
-                roles.Add(r);
-            }
+            
+            //var roles = await securityDb.ApplicationUserRoles.Include(x => x.Role).Where(x => x.UserId == user.Id).Select(x => (dynamic) new { x.Role.Id, x.Role.Name }).ToListAsync();
 
             var jwt = await Tokens.GenerateJwt(
                 identity,
                 jwtFactory,
                 jwtOptions,
                 user,
-                roles,
+                null,
                 new JsonSerializerSettings { Formatting = Formatting.None },
                 securityDb);
+
+            IdentityUserToken<string> token = new IdentityUserToken<string>
+            {
+                UserId = user.Id, Name = "Token", LoginProvider = "Self", Value = jwt.ToString()
+            };
+            await securityDb.UserTokens.AddAsync(token);
+            await securityDb.SaveChangesAsync();
             return Ok(jwt);
         }
 

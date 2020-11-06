@@ -24,6 +24,7 @@ namespace AuthWebApplication.Models.Db
 
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
         public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
+        public DbSet<ApplicationUserToken> ApplicationUserTokens { get; set; }
         public DbSet<ApplicationPermission> Permissions { get; set; }
         public DbSet<ApplicationResource> Resources { get; set; }
 

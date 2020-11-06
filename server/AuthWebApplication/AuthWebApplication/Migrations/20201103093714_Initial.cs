@@ -229,11 +229,19 @@ namespace AuthWebApplication.Migrations
                     UserId = table.Column<string>(nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    Value = table.Column<string>(nullable: true),
+                    Discriminator = table.Column<string>(nullable: false),
+                    TenantId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AspNetTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -309,6 +317,11 @@ namespace AuthWebApplication.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_TenantId",
                 table: "AspNetUsers",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserTokens_TenantId",
+                table: "AspNetUserTokens",
                 column: "TenantId");
         }
 

@@ -4,7 +4,11 @@ import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams,
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 
-export const Home = () => { return (<h2>Hello. You are in Home</h2>) };
+export const Home = () => {
+  return (
+    <h1>Welcome home!</h1>
+  )
+};
 
 export const PostCreate = () => {
   let history = useHistory();
@@ -16,7 +20,7 @@ export const PostCreate = () => {
   function success(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    //location = { latitude, longitude };  
+    //location = {latitude, longitude};
     setLocation({ latitude, longitude });
   }
 
@@ -76,7 +80,7 @@ export const PostEdit = (props) => {
   function success(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    //location = { latitude, longitude };  
+    //location = {latitude, longitude};
     setLocation({ latitude, longitude });
   }
 

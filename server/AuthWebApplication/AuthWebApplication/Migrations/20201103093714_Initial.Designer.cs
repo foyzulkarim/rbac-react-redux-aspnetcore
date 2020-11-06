@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthWebApplication.Migrations
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20201101090822_Initial")]
+    [Migration("20201103093714_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -316,12 +316,18 @@ namespace AuthWebApplication.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserToken<string>");
                 });
 
             modelBuilder.Entity("AuthWebApplication.Models.ApplicationRole", b =>
@@ -351,6 +357,19 @@ namespace AuthWebApplication.Migrations
                     b.HasIndex("TenantId");
 
                     b.HasDiscriminator().HasValue("ApplicationUserRole");
+                });
+
+            modelBuilder.Entity("AuthWebApplication.Models.ApplicationUserToken", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserToken<string>");
+
+                    b.Property<string>("TenantId")
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.HasIndex("TenantId");
+
+                    b.HasDiscriminator().HasValue("ApplicationUserToken");
                 });
 
             modelBuilder.Entity("AuthWebApplication.Models.ApplicationPermission", b =>
@@ -439,6 +458,14 @@ namespace AuthWebApplication.Migrations
                 });
 
             modelBuilder.Entity("AuthWebApplication.Models.ApplicationUserRole", b =>
+                {
+                    b.HasOne("AuthWebApplication.Models.ApplicationTenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("AuthWebApplication.Models.ApplicationUserToken", b =>
                 {
                     b.HasOne("AuthWebApplication.Models.ApplicationTenant", "Tenant")
                         .WithMany()
