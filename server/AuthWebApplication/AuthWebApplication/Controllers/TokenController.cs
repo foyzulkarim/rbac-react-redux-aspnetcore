@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthWebApplication.Models;
 using AuthWebApplication.Models.Db;
+using AuthWebApplication.Services;
 using AuthWebApplication.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,15 +28,17 @@ namespace AuthWebApplication.Controllers
         private readonly JwtIssuerOptions jwtOptions;
         private readonly SecurityDbContext securityDb;
         private readonly ILogger<TokenController> logger;
+        private readonly RedisService redisService;
 
         public TokenController(ILogger<TokenController> logger, UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory,
-            IOptions<JwtIssuerOptions> jwtOptions, SecurityDbContext securityDb)
+            IOptions<JwtIssuerOptions> jwtOptions, SecurityDbContext securityDb, RedisService redisService)
         {
             this.logger = logger;
             this.userManager = userManager;
             this.jwtFactory = jwtFactory;
             this.jwtOptions = jwtOptions.Value;
             this.securityDb = securityDb;
+            this.redisService = redisService;
         }
 
         [AllowAnonymous]
@@ -54,8 +58,8 @@ namespace AuthWebApplication.Controllers
             }
 
             Claim claim = identity.Claims.First(x => x.Type == Constants.Strings.JwtClaimIdentifiers.Id);
-            var id = claim.Value.ToString();
-            ApplicationUser user = securityDb.Users.First(x => x.Id == id);
+            var userId = claim.Value.ToString();
+            ApplicationUser user = securityDb.Users.First(x => x.Id == userId);
 
             if (user == null)
             {
@@ -69,7 +73,7 @@ namespace AuthWebApplication.Controllers
                 return BadRequest("User is Deactivated");
             }
 
-            
+
             //var roles = await securityDb.ApplicationUserRoles.Include(x => x.Role).Where(x => x.UserId == user.Id).Select(x => (dynamic) new { x.Role.Id, x.Role.Name }).ToListAsync();
 
             var jwt = await Tokens.GenerateJwt(
@@ -81,12 +85,21 @@ namespace AuthWebApplication.Controllers
                 new JsonSerializerSettings { Formatting = Formatting.None },
                 securityDb);
 
-            IdentityUserToken<string> token = new IdentityUserToken<string>
+            var jtiClaim = identity.Claims.First(x => x.Type == JwtRegisteredClaimNames.Jti);
+
+            var token = new ApplicationUserToken()
             {
-                UserId = user.Id, Name = "Token", LoginProvider = "Self", Value = jwt.ToString()
+                UserId = user.Id,
+                Name = jtiClaim.Value,
+                LoginProvider = "Self",
+                Value = true.ToString()
             };
+
             await securityDb.UserTokens.AddAsync(token);
             await securityDb.SaveChangesAsync();
+
+            await redisService.Set(token.Name, user.Id);
+
             return Ok(jwt);
         }
 

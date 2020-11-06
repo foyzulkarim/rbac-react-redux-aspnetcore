@@ -8,6 +8,11 @@ namespace AuthWebApplication.Models
 {
     public class ApplicationUserToken : IdentityUserToken<string>, IIndex
     {
+        [IsIndex]
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
+        public string Jti { get; set; }
+
         [Column(TypeName = "varchar(64)")]
         [MaxLength(64)]
         public string TenantId { get; set; }

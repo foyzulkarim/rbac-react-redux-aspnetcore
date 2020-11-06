@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Models;
 using WebApplication2.Services;
 using Microsoft.AspNetCore.Authorization;
+using WebApplication2.Attributes;
 
 namespace WebApplication2.Controllers
 {
-    [Authorize]
+    [TokenAuthorize]
     [EnableCors("all")]
     [Route("api/[controller]")]
     [ApiController]
