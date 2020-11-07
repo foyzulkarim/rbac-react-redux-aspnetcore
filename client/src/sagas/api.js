@@ -93,3 +93,13 @@ export const getRoles = () => {
     console.log("getRoles api call ->");
     return axios.get(`${AuthUrl}/api/ApplicationRoles`);
 }
+
+export const createPermission = (data) => {
+    console.log("createPermission api call ->", data);
+    return axios.post(`${AuthUrl}/api/ApplicationPermissions`, data);
+}
+
+export const getPermissions = () => {
+    console.log("getPermissions api call ->");
+    return axios.get(`${AuthUrl}/api/ApplicationPermissions`);
+}
