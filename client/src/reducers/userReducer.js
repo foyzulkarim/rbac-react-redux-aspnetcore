@@ -20,7 +20,8 @@ export default (state = initialState, action) => {
                 isAuthenticated: true,
                 user: { username: data.userName },
                 token: data.access_token,
-                role: data.role
+                role: data.role,
+                resources: data.resources
             };
         case Constants.LOGOUT_REQUEST:
             localStorage.removeItem('data');

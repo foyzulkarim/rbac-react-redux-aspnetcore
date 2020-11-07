@@ -22,7 +22,7 @@ axios.interceptors.response.use(function (response) {
     if (error.response.status === 401) {
         localStorage.removeItem('data');
         window.location = '/login';
-    } else {       
+    } else {
         return Promise.reject(error.response);
     }
 });
@@ -74,8 +74,22 @@ export const register = (data) => {
     return axios.post(`${AuthUrl}/api/user/register`, data);
 }
 
-
 export const createResource = (data) => {
     console.log("createResource api call ->", data);
     return axios.post(`${AuthUrl}/api/ApplicationResources`, data);
+}
+
+export const getResources = () => {
+    console.log("getResources api call ->");
+    return axios.get(`${AuthUrl}/api/ApplicationResources`);
+}
+
+export const createRole = (data) => {
+    console.log("createRole api call ->", data);
+    return axios.post(`${AuthUrl}/api/ApplicationRoles`, data);
+}
+
+export const getRoles = () => {
+    console.log("getRoles api call ->");
+    return axios.get(`${AuthUrl}/api/ApplicationRoles`);
 }

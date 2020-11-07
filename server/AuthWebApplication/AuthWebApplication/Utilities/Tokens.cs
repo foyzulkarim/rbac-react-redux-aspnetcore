@@ -23,7 +23,7 @@ namespace AuthWebApplication.Utilities
             string token = await jwtFactory.GenerateEncodedToken(user.UserName, identity);
             if (roles!=null)
             {
-                var roleIds = roles.Select(x => (string)x.RoleId).ToList();
+                var roleIds = roles.Select(x => (string)x.Id).ToList();
                 var permissions = db.Permissions.Include(x => x.Resource).Where(x => roleIds.Contains(x.RoleId) && x.IsAllowed);
                 var resources =
                     permissions.Select(x => new { name = x.Resource.Name, isAllowed = x.IsAllowed, isDisabled = x.IsDisabled })

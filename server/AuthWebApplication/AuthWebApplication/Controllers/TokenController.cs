@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthWebApplication.Models;
@@ -74,14 +75,15 @@ namespace AuthWebApplication.Controllers
             }
 
 
-            //var roles = await securityDb.ApplicationUserRoles.Include(x => x.Role).Where(x => x.UserId == user.Id).Select(x => (dynamic) new { x.Role.Id, x.Role.Name }).ToListAsync();
+            var userRoles = securityDb.ApplicationUserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
+            var roles = securityDb.ApplicationRoles.Where(x => userRoles.Contains(x.Id)).Select(x => (dynamic)new { x.Id, x.Name }).ToList();
 
             var jwt = await Tokens.GenerateJwt(
                 identity,
                 jwtFactory,
                 jwtOptions,
                 user,
-                null,
+                roles,
                 new JsonSerializerSettings { Formatting = Formatting.None },
                 securityDb);
 

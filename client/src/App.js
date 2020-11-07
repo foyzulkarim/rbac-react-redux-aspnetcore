@@ -8,7 +8,9 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Constants } from "./constants";
 import { usePermission, checkPermission } from "./hooks/usePermission.js";
-import Basic from "./components/resources";
+import Basic from "./components/Resource";
+import Permission from "./components/Permission";
+import Role from './components/Role';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
 
@@ -69,6 +71,15 @@ const App = () => {
     return state.userContext;
   });
 
+  //console.log('userContext', userContext);
+
+  let links = [
+    { name: 'link-posts', url: '/posts', text: 'Posts' },
+    { name: 'link-post-create', url: '/post-create', text: 'Create post' },
+    { name: 'link-permission-create', url: '/permission-create', text: 'Create permission' },
+    { name: 'link-role-create', url: '/role-create', text: 'Create role' },
+  ];
+
   return (
     <Router>
       <div className="App">
@@ -79,8 +90,11 @@ const App = () => {
               <Link to="/" className="list-group-item list-group-item-action bg-light">Home</Link>
               {userContext.isAuthenticated &&
                 <>
-                  <Link to="/posts" className="list-group-item list-group-item-action bg-light">Posts</Link>
-                  <Link to="/post-create" className="list-group-item list-group-item-action bg-light">Create Post</Link>
+                  {
+                    links.map((link, index) => {
+                      return <Link key={index} to={link.url} className="list-group-item list-group-item-action bg-light">{link.text}</Link>
+                    })
+                  }
                 </>
               }
               <>
@@ -104,6 +118,8 @@ const App = () => {
                 <Route path="/login" component={Login}></Route>
                 <Route path="/register" component={Register}></Route>
                 <Route path="/basic" component={Basic}></Route>
+                <Route path="/permission-create" component={Permission}></Route>
+                <Route path="/role-create" component={Role}></Route>
                 <Route path="/"><Home /></Route>
               </Switch>
             </div>
