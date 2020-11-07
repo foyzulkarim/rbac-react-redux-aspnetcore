@@ -38,10 +38,10 @@ namespace AuthWebApplication.Services
             logger.LogDebug("Connected to Redis");
         }
 
-        public async Task<bool> Set(string key, string value)
+        public async Task<bool> Set(string key, string value, TimeSpan expiry)
         {
             var db = _redis.GetDatabase();
-            var stringSet = await db.StringSetAsync(key, value);
+            var stringSet = await db.StringSetAsync(key, value, expiry);
             return stringSet;
         }
 

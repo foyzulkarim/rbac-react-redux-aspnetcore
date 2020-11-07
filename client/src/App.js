@@ -8,7 +8,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Constants } from "./constants";
 import { usePermission, checkPermission } from "./hooks/usePermission.js";
-import Basic from "./components/Resource";
+import { ResourceCreate, ResourceList } from "./components/Resource";
 import Permission from "./components/Permission";
 import Role from './components/Role';
 
@@ -78,7 +78,14 @@ const App = () => {
     { name: 'link-post-create', url: '/post-create', text: 'Create post' },
     { name: 'link-permission-create', url: '/permission-create', text: 'Create permission' },
     { name: 'link-role-create', url: '/role-create', text: 'Create role' },
+    { name: 'link-resource-create', url: '/resource-create', text: 'Create resource' },
+    { name: 'link-resource-list', url: '/resource-list', text: 'List resource' },
   ];
+
+  let routes = [
+    { path: '/resource-create', component: ResourceCreate },
+    { path: '/resource-list', component: ResourceList }
+  ]
 
   return (
     <Router>
@@ -97,9 +104,6 @@ const App = () => {
                   }
                 </>
               }
-              <>
-                <Link to="/basic" className="list-group-item list-group-item-action bg-light">Basic</Link>
-              </>
             </div>
           </div>
 
@@ -117,9 +121,14 @@ const App = () => {
                 <PrivateRoute path="/posts" component={Posts}></PrivateRoute>
                 <Route path="/login" component={Login}></Route>
                 <Route path="/register" component={Register}></Route>
-                <Route path="/basic" component={Basic}></Route>
+                <Route path="/basic" component={ResourceCreate}></Route>
                 <Route path="/permission-create" component={Permission}></Route>
                 <Route path="/role-create" component={Role}></Route>
+                {
+                  routes.map(route => {
+                    return <Route path={route.path} component={route.component}></Route>;
+                  })
+                }
                 <Route path="/"><Home /></Route>
               </Switch>
             </div>

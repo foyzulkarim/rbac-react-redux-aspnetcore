@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams,
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
+import { Table, Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 
 const ResourceSchema = Yup.object().shape({
     name: Yup.string()
@@ -11,7 +13,7 @@ const ResourceSchema = Yup.object().shape({
         .required('Hey input the value!')
 });
 
-const Basic = () => {
+export const ResourceCreate = () => {
 
     let history = useHistory();
     let dispatch = useDispatch();
@@ -27,7 +29,7 @@ const Basic = () => {
                         type: "ADD_RESOURCE", payload: values
                     });
                     setSubmitting(false);
-                    history.push('/home');
+                    history.push('/resource-list');
                 }}
             >
                 {({ isSubmitting }) => (
@@ -49,5 +51,49 @@ const Basic = () => {
     );
 };
 
+export const ResourceList = () => {
 
-export default Basic;
+    let dispatch = useDispatch();
+
+    const resourceContext = useSelector(state => {
+        return state.resourceContext;
+    });
+
+    useEffect(() => {
+        dispatch({ type: "FETCH_RESOURCE" });
+    }, []);
+
+    console.log("Resources", resourceContext.resourceList);
+
+    return (
+        <>
+            <Row>
+                <h2>Resource List {resourceContext.resourceList.length}</h2>
+            </Row>
+            <Row>
+                <Col>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                resourceContext.resourceList.map((resource, index) => {
+                                    return (
+                                        <tr>
+                                            <td>{index + 1}</td>
+                                            <td>{resource.name}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+        </>
+    );
+}

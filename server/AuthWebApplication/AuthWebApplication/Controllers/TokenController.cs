@@ -100,7 +100,7 @@ namespace AuthWebApplication.Controllers
             await securityDb.UserTokens.AddAsync(token);
             await securityDb.SaveChangesAsync();
 
-            await redisService.Set(token.Name, user.Id);
+            await redisService.Set(token.Name, user.Id, jwtOptions.ValidFor);
 
             return Ok(jwt);
         }
