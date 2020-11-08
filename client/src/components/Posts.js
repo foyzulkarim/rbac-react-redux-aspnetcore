@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-//import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import { Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,7 +12,7 @@ export const Home = () => {
 export const PostCreate = () => {
   let history = useHistory();
   let dispatch = useDispatch();
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   const [location, setLocation] = useState({});
 
@@ -69,9 +68,9 @@ export const PostCreate = () => {
   )
 };
 
-export const PostEdit = (props) => {
+export const PostEdit = () => {
   let history = useHistory();
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   let { id } = useParams();
   let dispatch = useDispatch();
 
@@ -98,7 +97,7 @@ export const PostEdit = (props) => {
 
   useEffect(() => {
     fetchData(id);
-  }, [id])
+  }, []);
 
   const post = useSelector(state => {
     return state.posts.selectedPost;
@@ -139,8 +138,8 @@ export const PostEdit = (props) => {
   )
 };
 
-export const PostDelete = (props) => {
-  const { register, handleSubmit, watch, errors } = useForm();
+export const PostDelete = () => {
+  const { handleSubmit } = useForm();
   let { id } = useParams();
   let history = useHistory();
   let dispatch = useDispatch();
@@ -151,7 +150,7 @@ export const PostDelete = (props) => {
 
   useEffect(() => {
     fetchData(id);
-  }, [id])
+  }, [])
 
   const post = useSelector(state => {
     return state.posts.selectedPost;
@@ -163,7 +162,7 @@ export const PostDelete = (props) => {
     history.push('/posts');
   }
 
-  const onSubmit = data => {
+  const onSubmit = () => {
     deleteData();
   };
 
@@ -186,14 +185,14 @@ export const PostSummary = (post) => {
       <h3>{post.title}</h3>
       <img src={post.imgUrl} style={{ height: "50px", width: "50px" }} alt="post img" className="pull-left thumb margin10 img-thumbnail"></img>
       <p>{post.emText}</p>
-      <Link to={location => `/post-detail/${post.id}`}>Detail</Link> &nbsp;
-      <Link to={location => `/post-edit/${post.id}`}>Edit</Link> &nbsp;
-      <Link to={location => `/post-delete/${post.id}`}>Delete</Link> &nbsp;
+      <Link to={() => `/post-detail/${post.id}`}>Detail</Link> &nbsp;
+      <Link to={() => `/post-edit/${post.id}`}>Edit</Link> &nbsp;
+      <Link to={() => `/post-delete/${post.id}`}>Delete</Link> &nbsp;
     </div>
   )
 }
 
-export const Comments = (props) => {
+export const Comments = () => {
 
   let { id } = useParams();
   let dispatch = useDispatch();
@@ -249,7 +248,7 @@ export const Comments = (props) => {
 export const CommentCreate = () => {
   let history = useHistory();
   let dispatch = useDispatch();
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit } = useForm();
 
   let { id } = useParams();
 
@@ -291,7 +290,7 @@ export const CommentCreate = () => {
   )
 };
 
-export const PostDetail = (props) => {
+export const PostDetail = () => {
 
   let { id } = useParams();
 

@@ -1,6 +1,5 @@
-import { call, put, takeEvery, all } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import * as api from './api';
-import { Constants } from "../constants";
 
 export function* add({ payload }) {
     try {

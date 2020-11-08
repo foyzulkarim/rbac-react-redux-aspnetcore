@@ -1,10 +1,9 @@
 import React from 'react';
-import Select from 'react-select';
-import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const PermissionSchema = Yup.object().shape({
     resourceId: Yup.string()
@@ -13,7 +12,7 @@ const PermissionSchema = Yup.object().shape({
         .required('Hey input the value!')
 });
 
-const Permission = () => {
+export const PermissionCreate = () => {
 
     let history = useHistory();
     let dispatch = useDispatch();
@@ -56,7 +55,7 @@ const Permission = () => {
                             <Field as="select" name="resourceId" className="col-sm-8">
                                 <option value="" key=""></option>
                                 {
-                                    resourceContext.resourceList.map(({ id, name }, index) => {
+                                    resourceContext.resourceList.map(({ id, name }) => {
                                         return <option value={id} key={id}>{name}</option>;
                                     })
                                 }
@@ -68,7 +67,7 @@ const Permission = () => {
                             <Field as="select" name="roleId" className="col-sm-8">
                                 <option value="" key=""></option>
                                 {
-                                    roleContext.roleList.map(({ id, name }, index) => {
+                                    roleContext.roleList.map(({ id, name }) => {
                                         return <option value={id} key={id}>{name}</option>;
                                     })
                                 }
@@ -90,6 +89,3 @@ const Permission = () => {
         </div >
     );
 };
-
-
-export default Permission;

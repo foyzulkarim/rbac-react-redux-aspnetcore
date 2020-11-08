@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import React from 'react';
+import { Redirect, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { Constants } from "../constants";
@@ -7,7 +7,7 @@ import { Constants } from "../constants";
 export const Login = () => {
     let history = useHistory();
     let dispatch = useDispatch();
-    const { register, handleSubmit, watch, errors } = useForm();
+    const { register, handleSubmit, errors } = useForm();
 
     let submitData = (data) => {
         dispatch({

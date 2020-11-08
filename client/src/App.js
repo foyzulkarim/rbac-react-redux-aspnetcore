@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, {  } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useRouteMatch, useParams, useHistory } from "react-router-dom";
-import { useForm } from 'react-hook-form';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { PostDetail, PostCreate, PostEdit, PostDelete, Posts, Home } from "./components/Posts";
+import { PostCreate, Posts, Home } from "./components/Posts";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Constants } from "./constants";
-import { usePermission, checkPermission } from "./hooks/usePermission.js";
+import { checkPermission } from "./utils/permissionManager.js";
 import { ResourceCreate, ResourceList } from "./components/Resource";
-import Permission from "./components/Permission";
-import Role from './components/Role';
+import { PermissionCreate } from "./components/Permission";
+import { RoleCreate } from './components/Role';
 
-export const PrivateRoute = ({ component: Component, ...rest }) => {
+export const PrivateRoute = ({ component: Component, name: resource, ...rest }) => {
 
   const userContext = useSelector(state => {
     return state.userContext;
   });
 
-  const isAllowed = checkPermission(Component.name, userContext);
+  const isAllowed = checkPermission(resource, userContext);
 
   return (
     <Route {...rest} render={props => {
@@ -74,18 +73,18 @@ const App = () => {
   //console.log('userContext', userContext);
 
   let links = [
-    { name: 'link-posts', url: '/posts', text: 'Posts' },
-    { name: 'link-post-create', url: '/post-create', text: 'Create post' },
-    { name: 'link-permission-create', url: '/permission-create', text: 'Create permission' },
-    { name: 'link-role-create', url: '/role-create', text: 'Create role' },
-    { name: 'link-resource-create', url: '/resource-create', text: 'Create resource' },
-    { name: 'link-resource-list', url: '/resource-list', text: 'List resource' },
+    { name: 'link-posts', url: '/posts', text: 'Posts', component: Posts },
+    { name: 'link-post-create', url: '/post-create', text: 'Create post', component: PostCreate },
+    { name: 'link-permission-create', url: '/permission-create', text: 'Create permission', component: PermissionCreate },
+    { name: 'link-role-create', url: '/role-create', text: 'Create role', component: RoleCreate },
+    { name: 'link-resource-create', url: '/resource-create', text: 'Create resource', component: ResourceCreate },
+    { name: 'link-resource-list', url: '/resource-list', text: 'List resource', component: ResourceList },
   ];
 
-  let routes = [
-    { path: '/resource-create', component: ResourceCreate },
-    { path: '/resource-list', component: ResourceList }
-  ]
+  // let routes = [
+  //   { path: '/resource-create', component: ResourceCreate },
+  //   { path: '/resource-list', component: ResourceList }
+  // ]
 
   return (
     <Router>
@@ -99,7 +98,7 @@ const App = () => {
                 <>
                   {
                     links.map((link, index) => {
-                      return <Link key={index} to={link.url} className="list-group-item list-group-item-action bg-light">{link.text}</Link>
+                      return checkPermission(link.name, userContext) && <Link key={index} to={link.url} className="list-group-item list-group-item-action bg-light">{link.text}</Link>
                     })
                   }
                 </>
@@ -114,21 +113,20 @@ const App = () => {
 
             <div className="container">
               <Switch>
-                <PrivateRoute path="/post-detail/:id" component={PostDetail}></PrivateRoute>
+                {/* <PrivateRoute path="/post-detail/:id" component={PostDetail}></PrivateRoute>
                 <PrivateRoute path="/post-create" component={PostCreate}></PrivateRoute>
                 <PrivateRoute path="/post-edit/:id" component={PostEdit}></PrivateRoute>
                 <PrivateRoute path="/post-delete/:id" component={PostDelete}></PrivateRoute>
-                <PrivateRoute path="/posts" component={Posts}></PrivateRoute>
-                <Route path="/login" component={Login}></Route>
-                <Route path="/register" component={Register}></Route>
-                <Route path="/basic" component={ResourceCreate}></Route>
-                <Route path="/permission-create" component={Permission}></Route>
-                <Route path="/role-create" component={Role}></Route>
+                <PrivateRoute path="/posts" component={Posts}></PrivateRoute> */}
+                {/* <Route path="/permission-create" component={PermissionCreate}></Route>
+                <Route path="/role-create" component={RoleCreate}></Route> */}
                 {
-                  routes.map(route => {
-                    return <Route path={route.path} component={route.component}></Route>;
+                  links.map(route => {
+                    return <PrivateRoute key={route.name} path={route.url} component={route.component} name={route.name}></PrivateRoute>;
                   })
                 }
+                <Route path="/login" component={Login}></Route>
+                <Route path="/register" component={Register}></Route>
                 <Route path="/"><Home /></Route>
               </Switch>
             </div>

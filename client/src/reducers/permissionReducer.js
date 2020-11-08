@@ -1,4 +1,3 @@
-import { Constants } from "../constants";
 const initialState = {
     permissionList: []    
 };

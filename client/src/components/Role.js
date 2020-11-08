@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const RoleSchema = Yup.object().shape({
     name: Yup.string()
@@ -11,7 +11,7 @@ const RoleSchema = Yup.object().shape({
         .required('Hey input the value!')
 });
 
-const Role = () => {
+export const RoleCreate = () => {
 
     let history = useHistory();
     let dispatch = useDispatch();
@@ -48,6 +48,3 @@ const Role = () => {
         </div>
     );
 };
-
-
-export default Role;

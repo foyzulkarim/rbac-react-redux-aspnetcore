@@ -10,19 +10,31 @@ const initialState = {
     resources: null
 }
 
+const getUser = (state, data) => {
+    return {
+        ...state,
+        isAuthenticated: true,
+        user: { username: data.userName },
+        token: data.access_token,
+        role: data.role,
+        resources: data.resources
+    };
+}
+
 export default (state = initialState, action) => {
     switch (action.type) {
         case Constants.LOGIN_SUCCESS:
             const data = action.payload.data;
             localStorage.setItem('data', JSON.stringify(data));
-            return {
-                ...state,
-                isAuthenticated: true,
-                user: { username: data.userName },
-                token: data.access_token,
-                role: data.role,
-                resources: data.resources
-            };
+            return getUser(state, data);
+        // return {
+        //     ...state,
+        //     isAuthenticated: true,
+        //     user: { username: data.userName },
+        //     token: data.access_token,
+        //     role: data.role,
+        //     resources: data.resources
+        // };
         case Constants.LOGOUT_REQUEST:
             localStorage.removeItem('data');
             return {
@@ -53,12 +65,13 @@ export default (state = initialState, action) => {
             let localStorageData = localStorage.getItem('data');
             if (localStorageData) {
                 localStorageData = JSON.parse(localStorageData);
-                return {
-                    ...state,
-                    isAuthenticated: true,
-                    user: { username: localStorageData.userName },
-                    token: localStorageData.access_token,
-                }
+                return getUser(state, localStorageData);
+                // return {
+                //     ...state,
+                //     isAuthenticated: true,
+                //     user: { username: localStorageData.userName },
+                //     token: localStorageData.access_token,
+                // }
             }
 
             return state;

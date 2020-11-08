@@ -96,7 +96,7 @@ namespace AuthWebApplication.Controllers
                 LoginProvider = "Self",
                 Value = true.ToString()
             };
-
+            
             await securityDb.UserTokens.AddAsync(token);
             await securityDb.SaveChangesAsync();
 

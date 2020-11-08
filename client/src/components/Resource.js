@@ -1,10 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Row, Col } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const ResourceSchema = Yup.object().shape({
     name: Yup.string()

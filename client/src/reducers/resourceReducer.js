@@ -1,7 +1,6 @@
-import { Constants } from "../constants";
 const initialState = {
     resourceList: [],
-    selectedResource: {},    
+    selectedResource: {},
     notificationText: ''
 };
 
@@ -25,7 +24,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedPost: action.payload.data
-            };      
+            };
         case 'CLEAR_SELECTION':
             return {
                 ...state,

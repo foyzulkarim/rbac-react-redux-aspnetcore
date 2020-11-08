@@ -21,13 +21,13 @@ namespace AuthWebApplication.Utilities
             string id = identity.Claims.Single(c => c.Type == "id").Value;
             var name = user.FirstName + " " + user.LastName;
             string token = await jwtFactory.GenerateEncodedToken(user.UserName, identity);
+            List<string> resources = new List<string>();
             if (roles!=null)
             {
                 var roleIds = roles.Select(x => (string)x.Id).ToList();
-                var permissions = db.Permissions.Include(x => x.Resource).Where(x => roleIds.Contains(x.RoleId) && x.IsAllowed);
-                var resources =
-                    permissions.Select(x => new { name = x.Resource.Name, isAllowed = x.IsAllowed, isDisabled = x.IsDisabled })
-                        .ToList();
+                var permissions = db.Permissions.Include(x => x.Resource).Where(x => roleIds.Contains(x.RoleId) && x.IsAllowed).Select(x => new { name = x.Resource.Name, isAllowed = x.IsAllowed, isDisabled = x.IsDisabled })
+                    .ToList();
+                resources = permissions.Select(x => x.name).ToList();
             }
           
             var response = new
@@ -35,9 +35,7 @@ namespace AuthWebApplication.Utilities
                 id = id,
                 name = name,
                 userName = user.UserName,
-                //role = user.RoleName,
-                //roleId = roleId,
-                resources = "",
+                resources = resources,
                 roles = roles,
                 access_token = token,
                 expires_in = (int)jwtOptions.ValidFor.TotalSeconds,
