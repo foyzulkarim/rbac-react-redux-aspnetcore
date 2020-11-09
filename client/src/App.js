@@ -9,7 +9,7 @@ import { Constants } from "./constants";
 import { checkPermission } from "./utils/permissionManager.js";
 import { ResourceCreate, ResourceList } from "./components/Resource";
 import { PermissionCreate, PermissionList } from "./components/Permission";
-import { RoleCreate } from './components/Role';
+import { RoleCreate, RoleList } from './components/Role';
 
 export const PrivateRoute = ({ component: Component, name: resource, ...rest }) => {
 
@@ -78,6 +78,7 @@ const App = () => {
     { name: 'link-permission-create', url: '/permission-create', text: 'Create permission', component: PermissionCreate },
     { name: 'link-permission-list', url: '/permission-list', text: 'List permissions', component: PermissionList },
     { name: 'link-role-create', url: '/role-create', text: 'Create role', component: RoleCreate },
+    { name: 'link-role-list', url: '/role-list', text: 'List role', component: RoleList },
     { name: 'link-resource-create', url: '/resource-create', text: 'Create resource', component: ResourceCreate },
     { name: 'link-resource-list', url: '/resource-list', text: 'List resource', component: ResourceList },
   ];

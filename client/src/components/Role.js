@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { Table, Row, Col } from 'react-bootstrap';
 
 const RoleSchema = Yup.object().shape({
     name: Yup.string()
@@ -48,3 +49,50 @@ export const RoleCreate = () => {
         </div>
     );
 };
+
+export const RoleList = () => {
+
+    let dispatch = useDispatch();
+
+    const roleContext = useSelector(state => {
+        return state.roleContext;
+    });
+
+    useEffect(() => {
+        dispatch({ type: "FETCH_ROLE" });
+    }, []);
+
+    console.log("Resources", roleContext.roleList);
+
+    return (
+        <>
+            <Row>
+                <h2>Role List {roleContext.roleList.length}</h2>
+            </Row>
+            <Row>
+                <Col>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                roleContext.roleList.map((resource, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{resource.name}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+        </>
+    );
+}

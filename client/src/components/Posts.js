@@ -201,8 +201,8 @@ export const PostSummary = (post) => {
       <p>{post.emText}</p>
       <Link to={() => `/post-detail/${post.id}`}>Detail</Link> &nbsp;
       <Link to={() => `/post-edit/${post.id}`}>Edit</Link> &nbsp;
-      <Link to={() => `/post-delete/${post.id}`}>Delete</Link> &nbsp;
-      <SecuedLink resource='link-post-delete' url={ `/post-delete/${post.id}`} text='Delete'></SecuedLink>
+      {/* <Link to={() => `/post-delete/${post.id}` style={{ pointerEvents: 'none' }}}>Delete</Link> &nbsp; */}
+      <SecuedLink resource='link-post-delete' url={`/post-delete/${post.id}`} text='Delete'></SecuedLink>
     </div>
   )
 }
