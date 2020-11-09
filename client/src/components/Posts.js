@@ -2,6 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
+import { checkPermission } from "../utils/permissionManager.js";
+
+export const SecuedLink = ({ resource, text, url }) => {
+
+  const userContext = useSelector(state => {
+    return state.userContext;
+  });
+
+  console.log('SecuedLink ', resource, text, url);
+
+  const isAllowed = checkPermission(resource, userContext);
+
+  return (isAllowed && <Link to={() => url}>{text}</Link>)
+}
 
 export const Home = () => {
   return (
@@ -188,6 +202,7 @@ export const PostSummary = (post) => {
       <Link to={() => `/post-detail/${post.id}`}>Detail</Link> &nbsp;
       <Link to={() => `/post-edit/${post.id}`}>Edit</Link> &nbsp;
       <Link to={() => `/post-delete/${post.id}`}>Delete</Link> &nbsp;
+      <SecuedLink resource='link-post-delete' url={ `/post-delete/${post.id}`} text='Delete'></SecuedLink>
     </div>
   )
 }

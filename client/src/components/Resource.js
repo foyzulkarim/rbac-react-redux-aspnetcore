@@ -83,7 +83,7 @@ export const ResourceList = () => {
                             {
                                 resourceContext.resourceList.map((resource, index) => {
                                     return (
-                                        <tr>
+                                        <tr key={index}>
                                             <td>{index + 1}</td>
                                             <td>{resource.name}</td>
                                         </tr>

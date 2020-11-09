@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { Register } from "./components/Register";
 import { Constants } from "./constants";
 import { checkPermission } from "./utils/permissionManager.js";
 import { ResourceCreate, ResourceList } from "./components/Resource";
-import { PermissionCreate } from "./components/Permission";
+import { PermissionCreate, PermissionList } from "./components/Permission";
 import { RoleCreate } from './components/Role';
 
 export const PrivateRoute = ({ component: Component, name: resource, ...rest }) => {
@@ -76,6 +76,7 @@ const App = () => {
     { name: 'link-posts', url: '/posts', text: 'Posts', component: Posts },
     { name: 'link-post-create', url: '/post-create', text: 'Create post', component: PostCreate },
     { name: 'link-permission-create', url: '/permission-create', text: 'Create permission', component: PermissionCreate },
+    { name: 'link-permission-list', url: '/permission-list', text: 'List permissions', component: PermissionList },
     { name: 'link-role-create', url: '/role-create', text: 'Create role', component: RoleCreate },
     { name: 'link-resource-create', url: '/resource-create', text: 'Create resource', component: ResourceCreate },
     { name: 'link-resource-list', url: '/resource-list', text: 'List resource', component: ResourceList },

@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { Table, Row, Col } from 'react-bootstrap';
 
 const PermissionSchema = Yup.object().shape({
     resourceId: Yup.string()
@@ -89,3 +90,53 @@ export const PermissionCreate = () => {
         </div >
     );
 };
+
+
+export const PermissionList = () => {
+
+    let dispatch = useDispatch();
+
+    const permissionContext = useSelector(state => {
+        return state.permissionContext;
+    });
+
+    useEffect(() => {
+        dispatch({ type: "FETCH_PERMISSION" });
+    }, []);
+
+    return (
+        <>
+            <Row>
+                <h2>Permission List {permissionContext.permissionList.length}</h2>
+            </Row>
+            <Row>
+                <Col>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Resource</th>
+                                <th>Role</th>
+                                <th>Is allowed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                permissionContext.permissionList.map((resource, index) => {
+                                    return (
+                                        <tr>
+                                            <td>{index + 1}</td>
+                                            <td>{resource.resourceName}</td>
+                                            <td>{resource.roleName}</td>
+                                            <td>{resource.isAllowed.toString()}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+        </>
+    );
+}

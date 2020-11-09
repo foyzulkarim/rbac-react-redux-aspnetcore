@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AuthWebApplication.Models;
 using AuthWebApplication.Models.Db;
+using AuthWebApplication.Models.ViewModels;
 
 namespace AuthWebApplication.Controllers
 {
@@ -23,9 +24,9 @@ namespace AuthWebApplication.Controllers
 
         // GET: api/ApplicationPermissions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationPermission>>> GetPermissions()
+        public async Task<ActionResult<IEnumerable<ApplicationPermissionViewModel>>> GetPermissions()
         {
-            return await _context.Permissions.ToListAsync();
+            return await _context.Permissions.Include(x=>x.Role).Include(x=>x.Resource).Select(x=>new ApplicationPermissionViewModel(x)).ToListAsync();
         }
 
         // GET: api/ApplicationPermissions/5
