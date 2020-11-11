@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Switch, Route, Link, useRouteMatch, useParams, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { checkPermission } from "../utils/permissionManager.js";
+import { checkPermission, checkIsDisabled } from "../utils/permissionManager.js";
 
 export const SecuedLink = ({ resource, text, url }) => {
 
@@ -13,8 +13,9 @@ export const SecuedLink = ({ resource, text, url }) => {
   console.log('SecuedLink ', resource, text, url);
 
   const isAllowed = checkPermission(resource, userContext);
+  const isDisabled = checkIsDisabled(resource, userContext);
 
-  return (isAllowed && <Link to={() => url}>{text}</Link>)
+  return (isAllowed && <Link className={isDisabled ? "disable-control" : ""} to={() => url}>{text}</Link>)
 }
 
 export const Home = () => {
@@ -199,9 +200,8 @@ export const PostSummary = (post) => {
       <h3>{post.title}</h3>
       <img src={post.imgUrl} style={{ height: "50px", width: "50px" }} alt="post img" className="pull-left thumb margin10 img-thumbnail"></img>
       <p>{post.emText}</p>
-      <Link to={() => `/post-detail/${post.id}`}>Detail</Link> &nbsp;
-      <Link to={() => `/post-edit/${post.id}`}>Edit</Link> &nbsp;
-      {/* <Link to={() => `/post-delete/${post.id}` style={{ pointerEvents: 'none' }}}>Delete</Link> &nbsp; */}
+      <SecuedLink resource='link-post-edit' url={`/post-detail/${post.id}`} text='Detail'></SecuedLink>&nbsp;
+      <SecuedLink resource='link-post-edit' url={`/post-edit/${post.id}`} text='Edit'></SecuedLink>&nbsp;
       <SecuedLink resource='link-post-delete' url={`/post-delete/${post.id}`} text='Delete'></SecuedLink>
     </div>
   )
@@ -313,6 +313,7 @@ export const PostDetail = () => {
 
   let fetchData = (id) => {
     dispatch({ type: "FETCH_POST_DETAIL", payload: id });
+    dispatch({ type: "FETCH_COMMENTS", payload: id, });
   }
 
   useEffect(() => {
@@ -323,6 +324,10 @@ export const PostDetail = () => {
     return state.posts.selectedPost;
   });
 
+  const comments = useSelector(state => {
+    return state.posts.selectedComments;
+  });
+
   let match = useRouteMatch();
 
   return (
@@ -331,6 +336,7 @@ export const PostDetail = () => {
         <h2>{post.title}</h2>
         <img src={post.imgUrl} style={{ height: "50px", width: "50px" }} alt="post img" className="pull-left thumb margin10 img-thumbnail"></img>
         <article><p>{post.articleText}</p></article>
+        <p>Total comments {comments.length}</p>
         <a className="btn btn-blog pull-right marginBottom10" href={post.readMoreUrl}>READ MORE</a>
       </div>
       <div>

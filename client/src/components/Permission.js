@@ -81,6 +81,11 @@ export const PermissionCreate = () => {
                             <ErrorMessage className="col-sm-2 col-form-label text-danger" name="isAllowed" component="div" />
                         </div>
                         <div className="form-group row">
+                            <label htmlFor="isDisabled" className="col-sm-2 col-form-label">Is disabled</label>
+                            <label><Field type="checkbox" name="isDisabled" /></label>
+                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="isDisabled" component="div" />
+                        </div>
+                        <div className="form-group row">
                             <label htmlFor="name" className="col-sm-2 col-form-label"></label>
                             <button type="submit" disabled={isSubmitting}>Submit</button>
                         </div>
@@ -118,6 +123,7 @@ export const PermissionList = () => {
                                 <th>Resource</th>
                                 <th>Role</th>
                                 <th>Is allowed</th>
+                                <th>Is disabled</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,6 +135,7 @@ export const PermissionList = () => {
                                             <td>{resource.resourceName}</td>
                                             <td>{resource.roleName}</td>
                                             <td>{resource.isAllowed.toString()}</td>
+                                            <td>{resource.isDisabled.toString()}</td>
                                         </tr>
                                     )
                                 })

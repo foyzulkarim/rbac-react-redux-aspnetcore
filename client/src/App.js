@@ -2,7 +2,7 @@ import React, { } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { PostCreate, Posts, Home } from "./components/Posts";
+import { PostCreate, Posts, Home, PostDetail, PostEdit, PostDelete } from "./components/Posts";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Constants } from "./constants";
@@ -73,14 +73,17 @@ const App = () => {
   //console.log('userContext', userContext);
 
   let links = [
-    { name: 'link-posts', url: '/posts', text: 'Posts', component: Posts },
-    { name: 'link-post-create', url: '/post-create', text: 'Create post', component: PostCreate },
-    { name: 'link-permission-create', url: '/permission-create', text: 'Create permission', component: PermissionCreate },
-    { name: 'link-permission-list', url: '/permission-list', text: 'List permissions', component: PermissionList },
-    { name: 'link-role-create', url: '/role-create', text: 'Create role', component: RoleCreate },
-    { name: 'link-role-list', url: '/role-list', text: 'List role', component: RoleList },
-    { name: 'link-resource-create', url: '/resource-create', text: 'Create resource', component: ResourceCreate },
-    { name: 'link-resource-list', url: '/resource-list', text: 'List resource', component: ResourceList },
+    { name: 'link-posts', url: '/posts', text: 'Posts', component: Posts, isRootMenu: true },
+    { name: 'link-post-create', url: '/post-create', text: 'Create post', component: PostCreate, isRootMenu: true },
+    { name: 'link-post-detail', url: '/post-detail/:id', text: 'Detail post', component: PostDetail },
+    { name: 'link-post-edit', url: '/post-edit/:id', text: 'Edit post', component: PostEdit },
+    { name: 'link-post-delete', url: '/post-delete/:id', text: 'Delete post', component: PostDelete },
+    { name: 'link-permission-create', url: '/permission-create', text: 'Create permission', component: PermissionCreate, isRootMenu: true },
+    { name: 'link-permission-list', url: '/permission-list', text: 'List permissions', component: PermissionList, isRootMenu: true },
+    { name: 'link-role-create', url: '/role-create', text: 'Create role', component: RoleCreate, isRootMenu: true },
+    { name: 'link-role-list', url: '/role-list', text: 'List role', component: RoleList, isRootMenu: true },
+    { name: 'link-resource-create', url: '/resource-create', text: 'Create resource', component: ResourceCreate, isRootMenu: true },
+    { name: 'link-resource-list', url: '/resource-list', text: 'List resource', component: ResourceList, isRootMenu: true },
   ];
 
   // let routes = [
@@ -100,7 +103,7 @@ const App = () => {
                 <>
                   {
                     links.map((link, index) => {
-                      return checkPermission(link.name, userContext) && <Link key={index} to={link.url} className="list-group-item list-group-item-action bg-light">{link.text}</Link>
+                      return checkPermission(link.name, userContext) && link.isRootMenu && <Link key={index} to={link.url} className="list-group-item list-group-item-action bg-light">{link.text}</Link>
                     })
                   }
                 </>

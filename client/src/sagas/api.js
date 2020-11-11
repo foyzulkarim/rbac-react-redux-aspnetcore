@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BaseUrl = 'http://localhost:5005/api';
+const BaseUrl = 'http://localhost:5002/api';
 const AuthUrl = 'http://localhost:5000';
 
 
