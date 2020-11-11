@@ -7,7 +7,8 @@ const initialState = {
     isRegistered: false,
     error: null,
     role: null,
-    resources: null
+    resources: null,
+    jti: null
 }
 
 const getUser = (state, data) => {
@@ -17,7 +18,8 @@ const getUser = (state, data) => {
         user: { username: data.userName },
         token: data.access_token,
         role: data.role,
-        resources: data.resources
+        resources: data.resources,
+        jti: data.jti
     };
 }
 
@@ -35,7 +37,7 @@ export default (state = initialState, action) => {
         //     role: data.role,
         //     resources: data.resources
         // };
-        case Constants.LOGOUT_REQUEST:
+        case Constants.LOGOUT_REQUEST_SUCCESS:
             localStorage.removeItem('data');
             return {
                 isAuthenticated: initialState.isAuthenticated,

@@ -7,6 +7,11 @@ namespace AuthWebApplication.Models.ViewModels
 {
     public class ApplicationPermissionViewModel
     {
+        public ApplicationPermissionViewModel()
+        {
+            
+        }
+
         public ApplicationPermissionViewModel(ApplicationPermission permission)
         {
             this.Id = permission.Id;
@@ -17,6 +22,7 @@ namespace AuthWebApplication.Models.ViewModels
             this.ResourceName = permission.Resource.Name;
             this.IsAllowed = permission.IsAllowed.ToString();
             this.IsDisabled = permission.IsDisabled.ToString();
+            this.Name = permission.Resource.Name;
         }
 
         public string Id { get; set; }
@@ -28,6 +34,8 @@ namespace AuthWebApplication.Models.ViewModels
         public string RoleName { get; set; }
 
         public string ResourceName { get; set; }
+
+        public string Name { get; set; }
 
         public string IsAllowed { get; set; }
 

@@ -23,6 +23,7 @@ axios.interceptors.response.use(function (response) {
         localStorage.removeItem('data');
         window.location = '/login';
     } else {
+        window.location = '/';
         return Promise.reject(error.response);
     }
 });
@@ -67,6 +68,11 @@ export const getComments = (postId) => {
 export const login = (data) => {
     console.log("login api call ->", data);
     return axios.post(`${AuthUrl}/api/token`, data);
+}
+
+export const logout = (data) => {
+    console.log("logout api call ->", data);
+    return axios.post(`${AuthUrl}/api/logout`, data);
 }
 
 export const register = (data) => {

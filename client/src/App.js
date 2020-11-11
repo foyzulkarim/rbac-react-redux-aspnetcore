@@ -38,7 +38,8 @@ export const Navigation = () => {
   let history = useHistory();
 
   const logOut = () => {
-    dispatch({ type: Constants.LOGOUT_REQUEST });
+    let data = { jti: userContext.jti };
+    dispatch({ type: Constants.LOGOUT_REQUEST, payload: data });
   }
 
   let login = () => {

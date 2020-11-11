@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthWebApplication.Models;
 using AuthWebApplication.Models.Db;
+using AuthWebApplication.Models.ViewModels;
 using AuthWebApplication.Services;
 using AuthWebApplication.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -78,7 +79,7 @@ namespace AuthWebApplication.Controllers
             var userRoles = securityDb.ApplicationUserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
             var roles = securityDb.ApplicationRoles.Where(x => userRoles.Contains(x.Id)).Select(x => (dynamic)new { x.Id, x.Name }).ToList();
 
-            var jwt = await Tokens.GenerateJwt(
+            dynamic jwt = await Tokens.GenerateJwt(
                 identity,
                 jwtFactory,
                 jwtOptions,
@@ -92,16 +93,15 @@ namespace AuthWebApplication.Controllers
             var token = new ApplicationUserToken()
             {
                 UserId = user.Id,
-                Name = jtiClaim.Value,
-                LoginProvider = "Self",
-                Value = true.ToString()
+                Name = user.UserName,
+                LoginProvider = jtiClaim.Value,
+                Value = true.ToString(),
+                Jti = jtiClaim.Value
             };
-            
+
             await securityDb.UserTokens.AddAsync(token);
             await securityDb.SaveChangesAsync();
-
-            await redisService.Set(token.Name, user.Id, jwtOptions.ValidFor);
-
+            await redisService.Set($"{token.Name}", token, jwt, jwtOptions.ValidFor);
             return Ok(jwt);
         }
 
