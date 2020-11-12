@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthWebApplication.Models.ViewModels;
 using AuthWebApplication.Services;
@@ -8,11 +9,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AuthWebApplication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorizeTokenController : ControllerBase
@@ -24,8 +27,13 @@ namespace AuthWebApplication.Controllers
             this.redisService = redisService;
         }
 
-        public async Task<IActionResult> Get(string userName, string jti, string resource)
+        public async Task<IActionResult> Get(string resource)
         {
+            var userName = this.User.Identity.Name;
+            var claimsIdentity = this.User.Identities.First() as ClaimsIdentity;
+            var claim = claimsIdentity.Claims.First(x => x.Type == JwtRegisteredClaimNames.Jti);
+            var jti = claim.Value;
+
             var inValid = string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(jti) || string.IsNullOrWhiteSpace(resource);
             if (inValid)
             {
