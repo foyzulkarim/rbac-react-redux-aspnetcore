@@ -1,18 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using BizBook.Common.Library.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthWebApplication.Models
 {
-    public class ApplicationRole : IdentityRole
+    public class ApplicationRole : IdentityRole, IIndex
     {
+        public ApplicationRole()
+        {
+            
+        }
+
         public ApplicationRole(string name) : base(name)
         {
         }
 
-        [Column(TypeName = "varchar(64)")]
-        public string Description { get; set; }
+        public bool IsActive { get; set; } = true;
 
-        [Column(TypeName = "varchar(32)")]
-        public string DefaultRoute { get; set; }
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
+        public string TenantId { get; set; }
+
+        [ForeignKey("TenantId")]
+        public virtual ApplicationTenant Tenant { get; set; }
+
+        public void BuildIndices(ModelBuilder builder)
+        {
+            builder.BuildIndex<ApplicationRole>();
+        }
     }
 }

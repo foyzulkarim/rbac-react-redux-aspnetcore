@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BaseUrl = 'http://localhost:5005/api';
+const BaseUrl = 'http://localhost:5002/api';
 const AuthUrl = 'http://localhost:5000';
 
 
@@ -22,7 +22,8 @@ axios.interceptors.response.use(function (response) {
     if (error.response.status === 401) {
         localStorage.removeItem('data');
         window.location = '/login';
-    } else {       
+    } else {
+        window.location = '/';
         return Promise.reject(error.response);
     }
 });
@@ -69,7 +70,42 @@ export const login = (data) => {
     return axios.post(`${AuthUrl}/api/token`, data);
 }
 
+export const logout = (data) => {
+    console.log("logout api call ->", data);
+    return axios.post(`${AuthUrl}/api/logout`, data);
+}
+
 export const register = (data) => {
     console.log("register api call ->", data);
     return axios.post(`${AuthUrl}/api/user/register`, data);
+}
+
+export const createResource = (data) => {
+    console.log("createResource api call ->", data);
+    return axios.post(`${AuthUrl}/api/ApplicationResources`, data);
+}
+
+export const getResources = () => {
+    console.log("getResources api call ->");
+    return axios.get(`${AuthUrl}/api/ApplicationResources`);
+}
+
+export const createRole = (data) => {
+    console.log("createRole api call ->", data);
+    return axios.post(`${AuthUrl}/api/ApplicationRoles`, data);
+}
+
+export const getRoles = () => {
+    console.log("getRoles api call ->");
+    return axios.get(`${AuthUrl}/api/ApplicationRoles`);
+}
+
+export const createPermission = (data) => {
+    console.log("createPermission api call ->", data);
+    return axios.post(`${AuthUrl}/api/ApplicationPermissions`, data);
+}
+
+export const getPermissions = () => {
+    console.log("getPermissions api call ->");
+    return axios.get(`${AuthUrl}/api/ApplicationPermissions`);
 }

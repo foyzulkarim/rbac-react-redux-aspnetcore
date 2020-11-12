@@ -20,22 +20,18 @@ namespace AuthWebApplication.Utilities
 
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
         {
+            //string jti = await this._jwtOptions.JtiGenerator();
+
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userName),
-                new Claim(JwtRegisteredClaimNames.Jti, await this._jwtOptions.JtiGenerator()),
-                new Claim(
-                    JwtRegisteredClaimNames.Iat,
-                    ToUnixEpochDate(this._jwtOptions.IssuedAt).ToString(),
-                    ClaimValueTypes.Integer64),
+                //new Claim(JwtRegisteredClaimNames.Jti, jti),
+                new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(this._jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                // identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol),
                // identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id),                
             };
 
-            foreach (Claim claim in identity.Claims)
-            {
-                claims.Add(claim);
-            }
+            claims.AddRange(identity.Claims);
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
@@ -51,10 +47,11 @@ namespace AuthWebApplication.Utilities
             return encodedJwt;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id,  string roleId)
+        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
         {
             return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
             {
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.Id, id),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.UserName, userName),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.Rol,

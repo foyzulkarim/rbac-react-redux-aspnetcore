@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BizBook.Common.Library.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthWebApplication.Models
 {
     [Table("AspNetResources")]
-    public class ApplicationResource
+    public class ApplicationResource : IIndex
     {
         public ApplicationResource()
         {
@@ -14,10 +16,13 @@ namespace AuthWebApplication.Models
         }
 
         [Key]
-        [Column(TypeName = "varchar(128)")]
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
         public string Id { get; set; }
 
-        [Column(TypeName = "varchar(128)")]
+        [IsIndex]
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
         public string Name { get; set; }
 
         public bool IsPublic { get; set; }
@@ -25,5 +30,10 @@ namespace AuthWebApplication.Models
         public ResourceType ResourceType { get; set; }
 
         public virtual ICollection<ApplicationPermission> Permissions { get; set; }
+
+        public void BuildIndices(ModelBuilder builder)
+        {
+            builder.BuildIndex<ApplicationResource>();
+        }
     }
 }

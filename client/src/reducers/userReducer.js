@@ -6,6 +6,21 @@ const initialState = {
     token: null,
     isRegistered: false,
     error: null,
+    role: null,
+    resources: null,
+    jti: null
+}
+
+const getUser = (state, data) => {
+    return {
+        ...state,
+        isAuthenticated: true,
+        user: { username: data.userName },
+        token: data.access_token,
+        role: data.role,
+        resources: data.resources,
+        jti: data.jti
+    };
 }
 
 export default (state = initialState, action) => {
@@ -13,25 +28,27 @@ export default (state = initialState, action) => {
         case Constants.LOGIN_SUCCESS:
             const data = action.payload.data;
             localStorage.setItem('data', JSON.stringify(data));
-            return {
-                ...state,
-                isAuthenticated: true,
-                user: { username: data.userName },
-                token: data.access_token,
-            };
-        case Constants.LOGOUT_REQUEST:
+            return getUser(state, data);
+        // return {
+        //     ...state,
+        //     isAuthenticated: true,
+        //     user: { username: data.userName },
+        //     token: data.access_token,
+        //     role: data.role,
+        //     resources: data.resources
+        // };
+        case Constants.LOGOUT_REQUEST_SUCCESS:
             localStorage.removeItem('data');
             return {
                 isAuthenticated: initialState.isAuthenticated,
                 user: initialState.user,
                 token: initialState.token,
             };
-        // case Constants.REGISTER_REQUEST:
-        //     return {
-        //         ...state,
-        //         isRegistered: initialState.isRegistered,
-        //         error: initialState.error,
-        //     };
+        case Constants.PERMISSION_SUCCESS:
+            return {
+                ...state,
+                resources: data.resources
+            };
         case Constants.REGISTER_SUCCESS:
             console.log('REGISTER_SUCCESS', action.payload);
             return {
@@ -50,12 +67,13 @@ export default (state = initialState, action) => {
             let localStorageData = localStorage.getItem('data');
             if (localStorageData) {
                 localStorageData = JSON.parse(localStorageData);
-                return {
-                    ...state,
-                    isAuthenticated: true,
-                    user: { username: localStorageData.userName },
-                    token: localStorageData.access_token,
-                }
+                return getUser(state, localStorageData);
+                // return {
+                //     ...state,
+                //     isAuthenticated: true,
+                //     user: { username: localStorageData.userName },
+                //     token: localStorageData.access_token,
+                // }
             }
 
             return state;

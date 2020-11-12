@@ -1,40 +1,38 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using AuthWebApplication.Models.Db;
+using BizBook.Common.Library.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthWebApplication.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IIndex
     {
-        [Column(TypeName = "varchar(50)")]
+        [IsIndex]
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
         public string FirstName { get; set; }
 
-        [Column(TypeName = "varchar(50)")]
+        [IsIndex]
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
         public string LastName { get; set; }
 
         public bool IsActive { get; set; }
 
-        [Column(TypeName = "varchar(50)")]
-        public override string PhoneNumber { get; set; }
+        [IsIndex]
+        [Column(TypeName = "varchar(64)")]
+        [MaxLength(64)]
+        public string TenantId { get; set; }
 
-        [Column(TypeName = "varchar(128)")]
-        public string RoleName { get; set; }
+        [ForeignKey("TenantId")]
+        public virtual ApplicationTenant Tenant { get; set; }
 
-        public string RoleId { get; set; }
-
-        [ForeignKey("RoleId")]
-        public virtual ApplicationRole Role { get; set; }
-    }
-
-    public class ApplicationUserExtension : IIndexBuilder<ApplicationUser>
-    {
         public void BuildIndices(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>().HasIndex(x => x.PhoneNumber).HasName("IX_PhoneNumber");
-
-            builder.Entity<ApplicationUser>().HasIndex(x => x.FirstName).HasName("IX_FirstName");
-            builder.Entity<ApplicationUser>().HasIndex(x => x.LastName).HasName("IX_LastName");
+            builder.BuildIndex<ApplicationUser>();
+            builder.Entity<ApplicationUser>().HasIndex(x => x.UserName).HasName("IX_UserName");
         }
     }
 }

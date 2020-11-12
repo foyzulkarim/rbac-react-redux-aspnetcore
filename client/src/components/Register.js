@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useRouteMatch, useParams, useHistory } from "react-router-dom";
+import React from 'react';
+import { Redirect, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { Constants } from "../constants";
@@ -7,7 +7,7 @@ import { Constants } from "../constants";
 export const Register = () => {
     let history = useHistory();
     let dispatch = useDispatch();
-    const { register, handleSubmit, watch, errors, setError } = useForm();
+    const { register, handleSubmit, errors, setError } = useForm();
 
     let submitData = (data) => {
         dispatch({
@@ -16,7 +16,7 @@ export const Register = () => {
     }
 
     const onSubmit = data => {
-        if (data.password != data.confirmpassword) {
+        if (data.password !== data.confirmpassword) {
             setError("password", "notMatch", "Password and Confirm Password are mismatched");
             return;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AuthWebApplication.Models.Db;
+using AuthWebApplication.Services;
 using AuthWebApplication.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -39,6 +40,7 @@ namespace AuthWebApplication
             services.AddDbContext<SecurityDbContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddSingleton<IJwtFactory, JwtFactory>();
+            services.AddSingleton<RedisService>();
             services.AddCors(x=>x.AddPolicy("all", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddTokenValidation(BizBook365Com, BizBook365Com, SigningKey);
             services.AddIdentityBuilder<SecurityDbContext>();
@@ -46,7 +48,7 @@ namespace AuthWebApplication
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RedisService redisService)
         {
             if (env.IsDevelopment())
             {
@@ -62,6 +64,8 @@ namespace AuthWebApplication
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            redisService.Connect();
 
             app.UseEndpoints(endpoints =>
             {

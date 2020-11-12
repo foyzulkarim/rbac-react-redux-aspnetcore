@@ -35,6 +35,7 @@ namespace WebApplication2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             // requires using Microsoft.Extensions.Options
             services.Configure<BookstoreDatabaseSettings>(
                 Configuration.GetSection(nameof(BookstoreDatabaseSettings)));
@@ -50,6 +51,7 @@ namespace WebApplication2
                 });
             });
 
+            services.AddSingleton<Constants>(new Constants(Configuration));
             services.AddSingleton<PostService>();
             services.AddTokenValidation(BizBook365Com, BizBook365Com, SigningKey);
             services.AddControllers();

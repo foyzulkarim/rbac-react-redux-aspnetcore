@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthWebApplication", "..\AuthWebApplication\AuthWebApplication\AuthWebApplication.csproj", "{F802ACFD-5C2F-42A3-A716-E0B89F9B5E11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication2", "..\WebApplication2\WebApplication2\WebApplication2.csproj", "{601443BD-D8F7-4982-9AB7-E3D99D308477}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F802ACFD-5C2F-42A3-A716-E0B89F9B5E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F802ACFD-5C2F-42A3-A716-E0B89F9B5E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F802ACFD-5C2F-42A3-A716-E0B89F9B5E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F802ACFD-5C2F-42A3-A716-E0B89F9B5E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {807813D6-90B8-41B5-9DBB-C4CF8B46DA98}
+	EndGlobalSection
+EndGlobal

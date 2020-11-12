@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker';
 
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
-import promise from "redux-promise";
 import createSagaMiddleware from "redux-saga";
 
 import reducers from "./reducers";

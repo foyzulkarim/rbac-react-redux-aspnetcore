@@ -1,0 +1,4 @@
+.disable-control {
+    pointer-events: none;
+    color: gray;
+  }

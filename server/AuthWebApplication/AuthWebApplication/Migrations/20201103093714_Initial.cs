@@ -11,14 +11,29 @@ namespace AuthWebApplication.Migrations
                 name: "AspNetResources",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(128)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(128)", nullable: true),
+                    Id = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    Name = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
                     IsPublic = table.Column<bool>(nullable: false),
                     ResourceType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetResources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetTenants",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    Name = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    ExpiryDate = table.Column<DateTime>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetTenants", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,37 +45,51 @@ namespace AuthWebApplication.Migrations
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(type: "varchar(64)", nullable: true),
-                    DefaultRoute = table.Column<string>(type: "varchar(32)", nullable: true)
+                    IsActive = table.Column<bool>(nullable: true),
+                    TenantId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoles_AspNetTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AspNetTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetPermissions",
+                name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(128)", nullable: false),
-                    ResourceId = table.Column<string>(type: "varchar(128)", nullable: true),
-                    RoleId = table.Column<string>(nullable: true),
-                    IsAllowed = table.Column<bool>(nullable: false),
-                    IsDisabled = table.Column<bool>(nullable: false)
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
+                    LastName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
+                    TenantId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetPermissions", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetPermissions_AspNetResources_ResourceId",
-                        column: x => x.ResourceId,
-                        principalTable: "AspNetResources",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AspNetPermissions_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        name: "FK_AspNetUsers_AspNetTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AspNetTenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -87,37 +116,35 @@ namespace AuthWebApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "AspNetPermissions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(50)", nullable: true),
-                    LastName = table.Column<string>(type: "varchar(50)", nullable: true),
-                    IsActive = table.Column<bool>(nullable: false),
-                    PhoneNumber = table.Column<string>(type: "varchar(50)", nullable: true),
-                    RoleName = table.Column<string>(type: "varchar(128)", nullable: true),
-                    RoleId = table.Column<string>(nullable: true)
+                    Id = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    ResourceId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
+                    RoleId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    IsAllowed = table.Column<bool>(nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_AspNetPermissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetRoles_RoleId",
+                        name: "FK_AspNetPermissions_AspNetResources_ResourceId",
+                        column: x => x.ResourceId,
+                        principalTable: "AspNetResources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetPermissions_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetPermissions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -169,11 +196,18 @@ namespace AuthWebApplication.Migrations
                 {
                     UserId = table.Column<string>(nullable: false),
                     RoleId = table.Column<string>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false)
+                    Discriminator = table.Column<string>(nullable: false),
+                    TenantId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AspNetTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
@@ -195,11 +229,19 @@ namespace AuthWebApplication.Migrations
                     UserId = table.Column<string>(nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    Value = table.Column<string>(nullable: true),
+                    Discriminator = table.Column<string>(nullable: false),
+                    TenantId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AspNetTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -219,9 +261,19 @@ namespace AuthWebApplication.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetPermissions_UserId",
+                table: "AspNetPermissions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoles_TenantId",
+                table: "AspNetRoles",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -241,19 +293,14 @@ namespace AuthWebApplication.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_TenantId",
+                table: "AspNetUserRoles",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FirstName",
-                table: "AspNetUsers",
-                column: "FirstName");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LastName",
-                table: "AspNetUsers",
-                column: "LastName");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -268,14 +315,14 @@ namespace AuthWebApplication.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PhoneNumber",
+                name: "IX_AspNetUsers_TenantId",
                 table: "AspNetUsers",
-                column: "PhoneNumber");
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_RoleId",
-                table: "AspNetUsers",
-                column: "RoleId");
+                name: "IX_AspNetUserTokens_TenantId",
+                table: "AspNetUserTokens",
+                column: "TenantId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -302,10 +349,13 @@ namespace AuthWebApplication.Migrations
                 name: "AspNetResources");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "AspNetTenants");
         }
     }
 }
