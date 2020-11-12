@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/server/AuthWebApplication/AuthWebApplication/bin/Debug/netcoreapp3.1/AuthWebApplication.dll",
+            "program": "${workspaceFolder}/server/AuthWebApplication/AuthWebApplication/bin/Debug/net5.0/AuthWebApplication.dll",
             "args": [],
             "cwd": "${workspaceFolder}/server/AuthWebApplication/AuthWebApplication",
             "stopAtEntry": false,
@@ -32,7 +32,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/server/WebApplication2/WebApplication2/bin/Debug/netcoreapp3.1/WebApplication2.dll",
+            "program": "${workspaceFolder}/server/WebApplication2/WebApplication2/bin/Debug/net5.0/WebApplication2.dll",
             "args": [],
             "cwd": "${workspaceFolder}/server/WebApplication2/WebApplication2",
             "stopAtEntry": false,

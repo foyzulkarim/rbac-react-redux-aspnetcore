@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - rbacnet
+    volumes:
+      - mongo_data:/data/db
+  redis:
+    image: "redis:alpine"
+    container_name: redis
+    command: redis-server --requirepass AwesomePassw0rd123
+    ports:
+      - "6379:6379"
+    networks:
+      - rbacnet
+    volumes:
+      - redis_data:/var/lib/redis
+  mssql:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: mssql
+    environment:
+      SA_PASSWORD: "AwesomePassw0rd123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - rbacnet
+    volumes:
+      - mssql_data
+networks:
+  rbacnet:
+    driver: bridge
+volumes:
+  mongo_data:
+  mssql_data:
+  redis_data:

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace AuthWebApplication.Models.Db
 {
@@ -11,10 +13,21 @@ namespace AuthWebApplication.Models.Db
     {
         private const string SuperAdmin = "SuperAdmin";
 
+        public static void Initialize(SecurityDbContext context, UserManager<ApplicationUser> userManager,
+            string password, ILogger<DbInitializer> dbInitializerLogger)
+        {
+            CreateRole(context, dbInitializerLogger, SuperAdmin);
+            CreateDefaultUser(context, userManager, dbInitializerLogger, "Super Admin", "foyzulkarim@gmail.com",
+                    password, SuperAdmin).GetAwaiter()
+                .GetResult();
+            CreateResources(context, dbInitializerLogger);
+        }
+
         private static void CreateRole(SecurityDbContext context, ILogger<DbInitializer> logger, string role)
         {
             logger.LogInformation($"Create the role `{role}` for application");
-            var any = context.ApplicationRoles.AsEnumerable().Any(x => string.Equals(x.Name, role, StringComparison.CurrentCultureIgnoreCase));
+            var any = context.ApplicationRoles.AsEnumerable()
+                .Any(x => string.Equals(x.Name, role, StringComparison.CurrentCultureIgnoreCase));
             if (!any)
             {
                 var appRole = new ApplicationRole(role);
@@ -26,14 +39,17 @@ namespace AuthWebApplication.Models.Db
                 }
                 else
                 {
-                    ApplicationException exception = new ApplicationException($"Default role `{role}` cannot be created");
+                    ApplicationException exception =
+                        new ApplicationException($"Default role `{role}` cannot be created");
                     logger.LogError(exception, $"Exception occurred. {exception.Message}");
                     throw exception;
                 }
             }
         }
 
-        private static async Task<ApplicationUser> CreateDefaultUser(SecurityDbContext context, UserManager<ApplicationUser> userManager, ILogger<DbInitializer> logger, string displayName, string email, string password, string role)
+        private static async Task<ApplicationUser> CreateDefaultUser(SecurityDbContext context,
+            UserManager<ApplicationUser> userManager, ILogger<DbInitializer> logger, string displayName, string email,
+            string password, string role)
         {
             logger.LogInformation($"Create default user with email `{email}` for application");
             ApplicationUser user = await userManager.FindByEmailAsync(email);
@@ -55,7 +71,8 @@ namespace AuthWebApplication.Models.Db
                 }
                 else
                 {
-                    ApplicationException exception = new ApplicationException($"Default user `{email}` cannot be created");
+                    ApplicationException exception =
+                        new ApplicationException($"Default user `{email}` cannot be created");
                     logger.LogError(exception, $"Exception occurred. {exception.Message}");
                     throw exception;
                 }
@@ -65,29 +82,54 @@ namespace AuthWebApplication.Models.Db
             return user;
         }
 
-        private static void AddRoleToApplicationUser(SecurityDbContext context, ILogger<DbInitializer> logger, ApplicationUser user, string role)
+        private static void AddRoleToApplicationUser(SecurityDbContext context, ILogger<DbInitializer> logger,
+            ApplicationUser user, string role)
         {
             var applicationRole = context.ApplicationRoles.First(x => x.Name == role);
-            var userRole = context.ApplicationUserRoles.FirstOrDefault(x => x.UserId == user.Id && x.RoleId == applicationRole.Id);
+            var userRole =
+                context.ApplicationUserRoles.FirstOrDefault(x => x.UserId == user.Id && x.RoleId == applicationRole.Id);
             if (userRole == null)
             {
-                ApplicationUserRole entity = new ApplicationUserRole() { RoleId = applicationRole.Id, UserId = user.Id };
+                ApplicationUserRole entity = new ApplicationUserRole() {RoleId = applicationRole.Id, UserId = user.Id};
                 context.ApplicationUserRoles.Add(entity);
                 var saveChanges = context.SaveChanges();
                 if (saveChanges == 0)
                 {
-                    ApplicationException exception = new ApplicationException($"Adding role to user `{user.Email}` cannot be done");
+                    ApplicationException exception =
+                        new ApplicationException($"Adding role to user `{user.Email}` cannot be done");
                     logger.LogError(exception, $"Exception occurred. {exception.Message}");
                     throw exception;
                 }
             }
         }
-        
-        public static void Initialize(SecurityDbContext context, UserManager<ApplicationUser> userManager, string password, ILogger<DbInitializer> dbInitializerLogger)
+
+        private static void CreateResources(SecurityDbContext context, ILogger<DbInitializer> logger)
         {
-            CreateRole(context, dbInitializerLogger, SuperAdmin);
-            CreateDefaultUser(context, userManager, dbInitializerLogger, "Super Admin", "foyzulkarim@gmail.com", password, SuperAdmin).GetAwaiter()
-                .GetResult();
+            var readAllText = File.ReadAllText("./Resources/resources.json");
+            var resources = JsonConvert.DeserializeObject<List<ApplicationResource>>(readAllText);
+            foreach (var resource in resources)
+            {
+                logger.LogInformation($"Create the resource `{resource.Name}` for application");
+                var any = context.Resources.AsEnumerable()
+                    .Any(x => string.Equals(x.Name, resource.Name, StringComparison.CurrentCultureIgnoreCase));
+                if (!any)
+                {
+                    context.Resources.Add(resource);
+                    var i = context.SaveChanges();
+                    if (i > 0)
+                    {
+                        logger.LogDebug($"Created the resource `{resource.Name}` successfully");
+                    }
+                    else
+                    {
+                        ApplicationException exception =
+                            new ApplicationException($"Default resource `{resource.Name}` cannot be created");
+                        logger.LogError(exception, $"Exception occurred. {exception.Message}");
+                        throw exception;
+                    }
+                }
+            }
+           
         }
     }
 }
