@@ -32,7 +32,10 @@ namespace AuthWebApplication.Services
             try
             {
                 var configString = $"{_redisHost}:{_redisPort},connectRetry=5";
-                _redis = ConnectionMultiplexer.Connect(configString);
+
+                ConfigurationOptions configuration = ConfigurationOptions.Parse(configString);
+                configuration.Password = "AwesomePassw0rd123";
+                _redis = ConnectionMultiplexer.Connect(configuration);
             }
             catch (RedisConnectionException err)
             {
@@ -64,7 +67,7 @@ namespace AuthWebApplication.Services
                 jtiList = array.ToObject<List<string>>();
             }
 
-            var value = new { jtis = jtiList, resources = resources };
+            var value = new {jtis = jtiList, resources = resources};
             var stringSet = await db.StringSetAsync(key, JsonConvert.SerializeObject(value), expiry);
             return stringSet;
         }
@@ -73,11 +76,11 @@ namespace AuthWebApplication.Services
         {
             var db = _redis.GetDatabase();
             var redisValue = await db.StringGetAsync(key);
-            var dbValue = (dynamic)JsonConvert.DeserializeObject(redisValue.ToString());
+            var dbValue = (dynamic) JsonConvert.DeserializeObject(redisValue.ToString());
             var array = ((dbValue as dynamic).jtis as dynamic) as JArray;
             var jtiList = array.ToObject<List<string>>();
             jtiList.Remove(jti);
-            var value = new { jtis = jtiList, resources = ((dbValue as dynamic).resources as JValue).ToString() };
+            var value = new {jtis = jtiList, resources = ((dbValue as dynamic).resources as JValue).ToString()};
             var stringSet = await db.StringSetAsync(key, JsonConvert.SerializeObject(value));
             return stringSet;
         }
@@ -108,7 +111,8 @@ namespace AuthWebApplication.Services
         public async Task<List<RedisKey>> SearchRedisKeys(string key)
         {
             var server = _redis.GetServer(_redisHost, _redisPort);
-            IAsyncEnumerator<RedisKey> keysAsync = server.KeysAsync(pattern: $"{key}*", pageSize: 100).GetAsyncEnumerator();
+            IAsyncEnumerator<RedisKey> keysAsync =
+                server.KeysAsync(pattern: $"{key}*", pageSize: 100).GetAsyncEnumerator();
             List<RedisKey> keys = new List<RedisKey> { };
             while (await keysAsync.MoveNextAsync())
             {

@@ -1,0 +1,92 @@
+[
+  {
+    "Id": "248a5b1e-f665-45a9-a862-bf7b46ac1c64",
+    "Name": "link-permission-create",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "2d904481-fe93-46ba-ad2f-62c64c85555d",
+    "Name": "/api/posts",
+    "IsPublic": "0",
+    "ResourceType": 1
+  },
+  {
+    "Id": "3c3d88b1-eb6c-4a1a-b743-49c49ceb3f0c",
+    "Name": "link-role-list",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "51b44c39-67f4-40bd-a9f2-260365ce096e",
+    "Name": "link-post-create",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "52579306-0182-4b1c-b437-68c88903950b",
+    "Name": "link-post-edit",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "6249ecae-9fb5-449c-a8a1-419882faaff5",
+    "Name": "link-resource-create",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "62c675ae-d35a-4503-a5c0-2ea5232ab999",
+    "Name": "link-resource-list",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "7d46e6d5-5d66-47f4-976f-7abbf1dc0a09",
+    "Name": "link-role-create",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "9c9ed0e6-2546-42c4-8101-adb52e21174f",
+    "Name": "link-posts",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "9f9c2b0d-7c80-486c-940d-e2974ce4f827",
+    "Name": "link-post-delete",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "a294716d-ebf1-4bcf-8bfb-cbc00ce87c48",
+    "Name": "link-user-create",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "a383da0d-c896-44d7-800a-2c100cf92910",
+    "Name": "list-post-edit",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "a7072f00-b7ac-4e9e-a0fc-c9b308631c4d",
+    "Name": "link-post-detail",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "aaa5922c-4aef-46cb-be8a-c672ae61fe08",
+    "Name": "Foyzul Karim",
+    "IsPublic": "0",
+    "ResourceType": 0
+  },
+  {
+    "Id": "cfa4a1a2-4f06-4d71-b6a6-46d063a861fd",
+    "Name": "link-permission-list",
+    "IsPublic": "0",
+    "ResourceType": 0
+  }
+]
