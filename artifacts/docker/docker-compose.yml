@@ -22,6 +22,7 @@ services:
   mssql:
     image: "mcr.microsoft.com/mssql/server"
     container_name: mssql
+    user: root
     environment:
       SA_PASSWORD: "AwesomePassw0rd123"
       ACCEPT_EULA: "Y"
@@ -30,7 +31,7 @@ services:
     networks:
       - rbacnet
     volumes:
-      - mssql_data
+      - mssql_data:/var/opt/mssql/data
 networks:
   rbacnet:
     driver: bridge
