@@ -1,4 +1,6 @@
-# Welcome to React Redux JWT Authentication using ASP.NET Core API !
+# Welcome to RBAC-React-Redux-ASPNETCore repository !
+This is a basic implementation of role-based access control which can be fully controlled from an Admin panel instead of hard coding the permissions inside of your code. 
+This implementation covers the scenario of a basic microservice based system where the users can be having different roles and based on their roles, their permission will be different accross both in the Client side and in the Server side. 
 
 ## Technology used
 
