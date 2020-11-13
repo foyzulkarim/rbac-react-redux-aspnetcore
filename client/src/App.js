@@ -8,7 +8,7 @@ import { Register } from "./components/Register";
 import { Constants } from "./constants";
 import { checkPermission } from "./utils/permissionManager.js";
 import { ResourceCreate, ResourceList } from "./components/Resource";
-import { PermissionCreate, PermissionList } from "./components/Permission";
+import { PermissionCreate, PermissionList, PermissionEdit } from "./components/Permission";
 import { RoleCreate, RoleList } from './components/Role';
 
 export const PrivateRoute = ({ component: Component, name: resource, ...rest }) => {
@@ -80,6 +80,7 @@ const App = () => {
     { name: 'link-post-edit', url: '/post-edit/:id', text: 'Edit post', component: PostEdit },
     { name: 'link-post-delete', url: '/post-delete/:id', text: 'Delete post', component: PostDelete },
     { name: 'link-permission-create', url: '/permission-create', text: 'Create permission', component: PermissionCreate, isRootMenu: true },
+    { name: 'link-permission-edit', url: '/permission-edit/:id', text: 'Edit permission', component: PermissionEdit, isRootMenu: false },
     { name: 'link-permission-list', url: '/permission-list', text: 'List permissions', component: PermissionList, isRootMenu: true },
     { name: 'link-role-create', url: '/role-create', text: 'Create role', component: RoleCreate, isRootMenu: true },
     { name: 'link-role-list', url: '/role-list', text: 'List role', component: RoleList, isRootMenu: true },
@@ -118,14 +119,7 @@ const App = () => {
             </nav>
 
             <div className="container">
-              <Switch>
-                {/* <PrivateRoute path="/post-detail/:id" component={PostDetail}></PrivateRoute>
-                <PrivateRoute path="/post-create" component={PostCreate}></PrivateRoute>
-                <PrivateRoute path="/post-edit/:id" component={PostEdit}></PrivateRoute>
-                <PrivateRoute path="/post-delete/:id" component={PostDelete}></PrivateRoute>
-                <PrivateRoute path="/posts" component={Posts}></PrivateRoute> */}
-                {/* <Route path="/permission-create" component={PermissionCreate}></Route>
-                <Route path="/role-create" component={RoleCreate}></Route> */}
+              <Switch>              
                 {
                   links.map(route => {
                     return <PrivateRoute key={route.name} path={route.url} component={route.component} name={route.name}></PrivateRoute>;
