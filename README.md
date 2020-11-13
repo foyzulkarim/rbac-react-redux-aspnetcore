@@ -66,11 +66,16 @@ http://localhost:3000/
 
 
 ### How to run video
-[![React Redux JWT Authentication using ASP.NET Core API](http://img.youtube.com/vi/ToEO8INViW8/0.jpg)](http://www.youtube.com/watch?v=ToEO8INViW8) React Redux JWT Authentication using ASP.NET Core API
+
+React Redux JWT Authentication using ASP.NET Core API
+
+[![React Redux JWT Authentication using ASP.NET Core API](http://img.youtube.com/vi/ToEO8INViW8/0.jpg)](http://www.youtube.com/watch?v=ToEO8INViW8) 
 
 
-With Docker
-[![How to run and debug the systems within less than 3 minutes](https://img.youtube.com/vi/3KcUTvjlB3g/0.jpg)](https://www.youtube.com/watch?v=3KcUTvjlB3g) How to run and debug the systems within less than 3 minutes
+How to run and debug the systems within less than 3 minutes with docker compose
+
+[![How to run and debug the systems within less than 3 minutes](https://img.youtube.com/vi/3KcUTvjlB3g/0.jpg)](https://www.youtube.com/watch?v=3KcUTvjlB3g) 
+
 
 ### Todos
  - Write tests
@@ -88,3 +93,4 @@ MIT
    [ASP.NET Core API]:<https://dotnet.microsoft.com/apps/aspnet/apis>
    [SQL Server]:<https://www.microsoft.com/en-us/sql-server/sql-server-downloads>
    [MongoDB]:<https://www.mongodb.com/>
+   [Redis]:<https://redis.io/>
