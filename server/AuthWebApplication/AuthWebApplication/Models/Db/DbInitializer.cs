@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -21,6 +22,7 @@ namespace AuthWebApplication.Models.Db
                     password, SuperAdmin).GetAwaiter()
                 .GetResult();
             CreateResources(context, dbInitializerLogger);
+            CreatePermissions(context, dbInitializerLogger);
         }
 
         private static void CreateRole(SecurityDbContext context, ILogger<DbInitializer> logger, string role)
@@ -90,7 +92,7 @@ namespace AuthWebApplication.Models.Db
                 context.ApplicationUserRoles.FirstOrDefault(x => x.UserId == user.Id && x.RoleId == applicationRole.Id);
             if (userRole == null)
             {
-                ApplicationUserRole entity = new ApplicationUserRole() {RoleId = applicationRole.Id, UserId = user.Id};
+                ApplicationUserRole entity = new ApplicationUserRole() { RoleId = applicationRole.Id, UserId = user.Id };
                 context.ApplicationUserRoles.Add(entity);
                 var saveChanges = context.SaveChanges();
                 if (saveChanges == 0)
@@ -129,7 +131,44 @@ namespace AuthWebApplication.Models.Db
                     }
                 }
             }
-           
+        }
+
+        private static void CreatePermissions(SecurityDbContext context, ILogger<DbInitializer> logger)
+        {
+            var readAllText = File.ReadAllText("./Resources/permissions.json");
+            var permissions = JsonConvert.DeserializeObject<List<ApplicationPermission>>(readAllText);
+            foreach (var permission in permissions)
+            {
+                logger.LogInformation($"Create the permission for resource `{permission.Resource.Name}` and role `{permission.Role.Name} ");
+
+                var role = context.ApplicationRoles.FirstOrDefault(x=>x.Name == permission.Role.Name);
+                var resource = context.Resources.FirstOrDefault(x=>x.Name == permission.Resource.Name);
+
+                var any = context.Permissions.Include(x => x.Role).Include(x => x.Resource).AsEnumerable()
+                    .Any(x => string.Equals(x.RoleId, role.Id, StringComparison.CurrentCultureIgnoreCase)
+                    && string.Equals(x.ResourceId, resource.Id, StringComparison.CurrentCultureIgnoreCase));
+                if (!any)
+                {
+                    var appPermission = new ApplicationPermission(){
+                        IsAllowed = permission.IsAllowed,
+                        ResourceId = resource.Id,
+                        RoleId = role.Id 
+                    };
+                    context.Permissions.Add(appPermission);
+                    var i = context.SaveChanges();
+                    if (i > 0)
+                    {
+                        logger.LogDebug($"Created the permission for resource `{permission.Resource.Name}` and role `{permission.Role.Name}");
+                    }
+                    else
+                    {
+                        ApplicationException exception =
+                            new ApplicationException($"Default resource `{permission.Resource.Name}` & role `{permission.Role.Name} cannot be created");
+                        logger.LogError(exception, $"Exception occurred. {exception.Message}");
+                        throw exception;
+                    }
+                }
+            }
         }
     }
 }
