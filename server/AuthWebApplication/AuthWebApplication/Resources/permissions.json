@@ -1,0 +1,56 @@
+[
+    {
+        "Role": {
+            "Name": "SuperAdmin"
+        },
+        "Resource": {
+            "Name": "link-permission-create"
+        },
+        "IsAllowed": true
+    },
+    {
+        "Role": {
+            "Name": "SuperAdmin"
+        },
+        "Resource": {
+            "Name": "link-permission-list"
+        },
+        "IsAllowed": true
+    },
+    {
+        "Role": {
+            "Name": "SuperAdmin"
+        },
+        "Resource": {
+            "Name": "link-resource-create"
+        },
+        "IsAllowed": true
+    },
+    {
+        "Role": {
+            "Name": "SuperAdmin"
+        },
+        "Resource": {
+            "Name": "link-resource-list"
+        },
+        "IsAllowed": true
+    },
+    {
+        "Role": {
+            "Name": "SuperAdmin"
+        },
+        "Resource": {
+            "Name": "link-role-create"
+        },
+        "IsAllowed": true
+    },
+    {
+        "Role": {
+            "Name": "SuperAdmin"
+        },
+        "Resource": {
+            "Name": "link-role-list"
+        },
+        "IsAllowed": true
+    }
+]
