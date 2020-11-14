@@ -5,13 +5,13 @@ const getElement = (resource, userContext) => {
 }
 
 export const checkPermission = (resource, userContext) => {
-    console.log('checkPermission', resource, userContext.resources);
+   // console.log('checkPermission', resource, userContext.resources);
     const element = getElement(resource, userContext);
     return userContext.isAuthenticated && element != null && element.isAllowed;
 }
 
 export const checkIsDisabled = (resource, userContext) => {
-    console.log('isDisabled', resource, userContext.resources);
+    // console.log('isDisabled', resource, userContext.resources);
     const element = getElement(resource, userContext);
     return userContext.isAuthenticated && element != null && element.isDisabled;
 }

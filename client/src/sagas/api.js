@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BaseUrl = 'http://localhost:5002/api';
-const AuthUrl = 'http://localhost:5000';
+const BaseUrl = 'https://localhost:5003/api';
+const AuthUrl = 'https://localhost:5001';
 
 
 axios.interceptors.request.use(function (config) {
@@ -105,7 +105,17 @@ export const createPermission = (data) => {
     return axios.post(`${AuthUrl}/api/ApplicationPermissions`, data);
 }
 
+export const editPermission = (data) => {
+    console.log("editPermission api call ->", data);
+    return axios.put(`${AuthUrl}/api/ApplicationPermissions/${data.id}`, data);
+}
+
 export const getPermissions = () => {
     console.log("getPermissions api call ->");
     return axios.get(`${AuthUrl}/api/ApplicationPermissions`);
+}
+
+export const getPermissionDetail = (id) => {
+    console.log("getPermissionDetail api call ->", id);
+    return axios.get(`${AuthUrl}/api/ApplicationPermissions/${id}`);
 }
