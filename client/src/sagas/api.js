@@ -119,3 +119,23 @@ export const getPermissionDetail = (id) => {
     console.log("getPermissionDetail api call ->", id);
     return axios.get(`${AuthUrl}/api/ApplicationPermissions/${id}`);
 }
+
+export const getUsers = () => {
+    console.log("getUsers api call ->");
+    return axios.get(`${AuthUrl}/api/Users`);
+}
+
+export const createUser = (data) => {
+    console.log("createUser api call ->", data);
+    return axios.post(`${AuthUrl}/api/Users`, data);
+}
+
+export const editUser = (data) => {
+    console.log("User api call ->", data);
+    return axios.put(`${AuthUrl}/api/Users/${data.id}`, data);
+}
+
+export const getUserDetail = (id) => {
+    console.log("getUserDetail api call ->", id);
+    return axios.get(`${AuthUrl}/api/Users/${id}`);
+}
