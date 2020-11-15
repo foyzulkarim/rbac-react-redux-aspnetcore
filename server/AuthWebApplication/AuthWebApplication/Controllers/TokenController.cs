@@ -75,7 +75,6 @@ namespace AuthWebApplication.Controllers
                 return BadRequest("User is Deactivated");
             }
 
-
             var userRoles = securityDb.ApplicationUserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
             var roles = securityDb.ApplicationRoles.Where(x => userRoles.Contains(x.Id)).Select(x => (dynamic)new { x.Id, x.Name }).ToList();
 

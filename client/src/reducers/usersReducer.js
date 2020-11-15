@@ -1,7 +1,9 @@
 const initialState = {
     userList: [],
     selectedUser: {},
-    shouldReload: false
+    shouldReload: false,
+    isSuccess: false,
+    errors: []
 };
 
 
@@ -12,24 +14,37 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 shouldReload: true,
+                isSuccess: true,
+                errors:[]
+            };
+        case 'ADD_USER_ERROR':
+            return {
+                ...state,
+                errors: action.payload.data,
+                isSuccess: false,
+                shouldReload: true,
             };
         case 'FETCH_USER_SUCCESS':
             return {
                 ...state,
                 shouldReload: false,
-                userList: action.payload.data
+                userList: action.payload.data,
+                isSuccess: false,
+                errors:[]
             };
         case 'FETCH_USER_DETAIL_SUCCESS':
             return {
                 ...state,
                 shouldReload: false,
-                selectedUser: action.payload.data
+                selectedUser: action.payload.data,
+                errors:[]
             }
         case 'EDIT_USER_SUCCESS':
             return {
                 ...state,
                 shouldReload: true,
-                selectedUser: {}
+                selectedUser: {},
+                errors:[]
             };
         default:
             return state;

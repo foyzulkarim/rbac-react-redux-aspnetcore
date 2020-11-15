@@ -23,7 +23,10 @@ axios.interceptors.response.use(function (response) {
         localStorage.removeItem('data');
         window.location = '/login';
     } else {
-        window.location = '/';
+        if (error.response.status === 403) {
+            window.location = '/';
+        }
+
         return Promise.reject(error.response);
     }
 });

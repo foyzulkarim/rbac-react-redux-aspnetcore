@@ -22,10 +22,13 @@ export const UserCreate = () => {
     let history = useHistory();
     let dispatch = useDispatch();
 
-    useEffect(() => {
-      
-    }, []);
+    const usersContext = useSelector(state => state.usersContext);
 
+    useEffect(() => {
+        console.log('usersContext', usersContext);
+        if (usersContext.isSuccess)
+            history.push('/user-list');
+    }, [usersContext.isSuccess]);
 
     return (
         <div>
@@ -33,7 +36,7 @@ export const UserCreate = () => {
             <Formik
                 enableReinitialize={true}
                 setFieldValue={(field, value) => console.log(field, value)}
-                initialValues={{ firstName: '', lastName: '', userName: '', email: '', phoneNumber: '', password: '' }}
+                initialValues={{ firstName: '', lastName: '', userName: '', email: '', phoneNumber: '', password: '', errors: usersContext.errors }}
                 validationSchema={UserSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     console.log(values);
@@ -41,47 +44,67 @@ export const UserCreate = () => {
                         type: "ADD_USER", payload: values
                     });
                     setSubmitting(false);
-                    history.push('/home');
                 }}
             >
-                {({ isSubmitting }) => (
-                    <Form>
-                        <div className="form-group row">
-                            <label htmlFor="firstName" className="col-sm-2 col-form-label">First Name</label>
-                            <Field className="col-sm-8 col-form-label" type="text" name="firstName" />
-                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="lastName" className="col-sm-2 col-form-label">Last Name</label>
-                            <Field className="col-sm-8 col-form-label" type="text" name="lastName" />
-                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="userName" className="col-sm-2 col-form-label">User Name</label>
-                            <Field className="col-sm-8 col-form-label" type="text" name="userName" />
-                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="userName" component="div" />
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
-                            <Field className="col-sm-8 col-form-label" type="text" name="email" />
-                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="phoneNumber" className="col-sm-2 col-form-label">Phone Number</label>
-                            <Field className="col-sm-8 col-form-label" type="text" name="phoneNumber" />
-                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="phoneNumber" component="div" />
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
-                            <Field className="col-sm-8 col-form-label" type="password" name="password" />
-                            <ErrorMessage className="col-sm-2 col-form-label text-danger" name="password" component="div" />
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="name" className="col-sm-2 col-form-label"></label>
-                            <button type="submit" disabled={isSubmitting}>Submit</button>
-                        </div>
-                    </Form>
-                )}
+                {({ isSubmitting, values, errors }) => {
+                    console.log('errors', errors, values.errors);
+                    let keys = Object.keys(values.errors);
+                    let validationErrors = [];
+                    keys.map((key) => {
+                        let value = values.errors[key][0];
+                        validationErrors.push({ key, value });
+                    });
+                    return (
+                        <Form>
+                            <div className="form-group row">
+                                <label htmlFor="firstName" className="col-sm-2 col-form-label">First Name</label>
+                                <Field className="col-sm-8 col-form-label" type="text" name="firstName" />
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="lastName" className="col-sm-2 col-form-label">Last Name</label>
+                                <Field className="col-sm-8 col-form-label" type="text" name="lastName" />
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="userName" className="col-sm-2 col-form-label">User Name</label>
+                                <Field className="col-sm-8 col-form-label" type="text" name="userName" />
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="userName" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
+                                <Field className="col-sm-8 col-form-label" type="text" name="email" />
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="phoneNumber" className="col-sm-2 col-form-label">Phone Number</label>
+                                <Field className="col-sm-8 col-form-label" type="text" name="phoneNumber" />
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="phoneNumber" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
+                                <Field className="col-sm-8 col-form-label" type="password" name="password" />
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="password" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="errors" className="col-sm-2 col-form-label"></label>
+                                <ul>
+                                    {
+                                        validationErrors.map(error =>
+                                            <li className="text-danger" key={error.key}>
+                                                {error.value}
+                                            </li>
+                                        )
+                                    }
+                                </ul>
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="name" className="col-sm-2 col-form-label"></label>
+                                <button type="submit" disabled={isSubmitting}>Submit</button>
+                            </div>
+                        </Form>
+                    );
+                }}
             </Formik>
         </div >
     );

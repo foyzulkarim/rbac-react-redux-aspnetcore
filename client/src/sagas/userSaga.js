@@ -7,6 +7,7 @@ export function* add({ payload }) {
         yield put({ type: 'ADD_USER_SUCCESS', payload: output });
     } catch (error) {
         console.log('add user error', error);
+        yield put({ type: 'ADD_USER_ERROR', payload: error });
     }
 }
 

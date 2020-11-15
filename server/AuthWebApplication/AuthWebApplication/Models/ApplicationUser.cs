@@ -29,6 +29,9 @@ namespace AuthWebApplication.Models
         [ForeignKey("TenantId")]
         public virtual ApplicationTenant Tenant { get; set; }
 
+        [NotMapped]
+        public string Password { get; set; }
+
         public void BuildIndices(ModelBuilder builder)
         {
             builder.BuildIndex<ApplicationUser>();
