@@ -56,25 +56,38 @@ namespace AuthWebApplication.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(applicationUser).State = EntityState.Modified;
-
-            try
+            bool modelIsInvalid = await ValidateUpdateModel(applicationUser);
+            if (modelIsInvalid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ApplicationUserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ModelState);
             }
 
-            return NoContent();
+            var user = await this.userManager.FindByIdAsync(id);
+            user.UserName = applicationUser.UserName;
+            user.Email = applicationUser.Email;
+            user.FirstName = applicationUser.FirstName;
+            user.LastName = applicationUser.LastName;
+            user.PhoneNumber = applicationUser.PhoneNumber;
+            user.IsActive = applicationUser.IsActive;
+
+            var updateUserResult = await this.userManager.UpdateAsync(user);
+            if (!updateUserResult.Succeeded)
+            {
+                IActionResult actionResult = GetErrorResult(updateUserResult);
+                return actionResult;
+            }
+
+            if (!string.IsNullOrEmpty(applicationUser.Password) && !string.IsNullOrEmpty(applicationUser.NewPassword))
+            {
+                var passwordUpdateResult = await this.userManager.ChangePasswordAsync(user, applicationUser.Password, applicationUser.NewPassword);
+                if (!passwordUpdateResult.Succeeded)
+                {
+                    IActionResult actionResult = GetErrorResult(passwordUpdateResult);
+                    return actionResult;
+                }
+            }
+
+            return CreatedAtAction("GetApplicationUser", new { id = applicationUser.Id }, applicationUser);
         }
 
         // POST: api/Users
@@ -133,6 +146,36 @@ namespace AuthWebApplication.Controllers
             {
                 isInvalid = true;
                 ModelState.AddModelError("email", "Duplicate Email");
+            }
+
+            return isInvalid;
+        }
+
+        private async Task<bool> ValidateUpdateModel(ApplicationUser applicationUser)
+        {
+            bool isInvalid = false;
+            if (await this.userManager.Users.AnyAsync(x => x.Id != applicationUser.Id && x.PhoneNumber == applicationUser.PhoneNumber))
+            {
+                isInvalid = true;
+                ModelState.AddModelError("phoneNumber", "Duplicate Phone number");
+            }
+
+            if (await this.userManager.Users.AnyAsync(x => x.Id != applicationUser.Id && x.UserName == applicationUser.UserName))
+            {
+                isInvalid = true;
+                ModelState.AddModelError("userName", "Duplicate User name");
+            }
+
+            if (await this.userManager.Users.AnyAsync(x => x.Id != applicationUser.Id && x.Email == applicationUser.Email))
+            {
+                isInvalid = true;
+                ModelState.AddModelError("email", "Duplicate Email");
+            }
+
+            if (!(string.IsNullOrEmpty(applicationUser.Password) && string.IsNullOrEmpty(applicationUser.NewPassword)))
+            {
+                isInvalid = true;
+                ModelState.AddModelError("password","Current password and New password both must be provided to change the password");
             }
 
             return isInvalid;

@@ -10,7 +10,7 @@ import { checkPermission } from "./utils/permissionManager.js";
 import { ResourceCreate, ResourceList } from "./components/Resource";
 import { PermissionCreate, PermissionList, PermissionEdit } from "./components/Permission";
 import { RoleCreate, RoleList } from './components/Role';
-import { UserCreate, UserList } from './components/User';
+import { UserCreate, UserEdit, UserList } from './components/User';
 
 export const PrivateRoute = ({ component: Component, name: resource, ...rest }) => {
 
@@ -89,6 +89,7 @@ const App = () => {
     { name: 'link-resource-list', url: '/resource-list', text: 'List resource', component: ResourceList, isRootMenu: true },
     { name: 'link-user-list', url: '/user-list', text: 'List user', component: UserList, isRootMenu: true },
     { name: 'link-user-create', url: '/user-create', text: 'Create user', component: UserCreate, isRootMenu: true },
+    { name: 'link-user-edit', url: '/user-edit/:id', text: 'Edit user', component: UserEdit, isRootMenu: false },
   ];
 
   // let routes = [
@@ -122,7 +123,7 @@ const App = () => {
             </nav>
 
             <div className="container">
-              <Switch>              
+              <Switch>
                 {
                   links.map(route => {
                     return <PrivateRoute key={route.name} path={route.url} component={route.component} name={route.name}></PrivateRoute>;

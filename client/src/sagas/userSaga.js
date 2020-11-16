@@ -7,7 +7,7 @@ export function* add({ payload }) {
         yield put({ type: 'ADD_USER_SUCCESS', payload: output });
     } catch (error) {
         console.log('add user error', error);
-        yield put({ type: 'ADD_USER_ERROR', payload: error });
+        yield put({ type: 'USER_ERROR', payload: error });
     }
 }
 
@@ -20,7 +20,8 @@ export function* edit({ payload }) {
         let output = yield call(api.editUser, payload);
         yield put({ type: 'EDIT_USER_SUCCESS', payload: output });     
     } catch (error) {
-        console.log('add user error', error);
+        console.log('edit user error', error);
+        yield put({ type: 'USER_ERROR', payload: error });
     }
 }
 

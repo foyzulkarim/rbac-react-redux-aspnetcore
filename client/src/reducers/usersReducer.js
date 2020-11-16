@@ -15,9 +15,9 @@ export default (state = initialState, action) => {
                 ...state,
                 shouldReload: true,
                 isSuccess: true,
-                errors:[]
+                errors: []
             };
-        case 'ADD_USER_ERROR':
+        case 'USER_ERROR':
             return {
                 ...state,
                 errors: action.payload.data,
@@ -30,21 +30,22 @@ export default (state = initialState, action) => {
                 shouldReload: false,
                 userList: action.payload.data,
                 isSuccess: false,
-                errors:[]
+                errors: []
             };
         case 'FETCH_USER_DETAIL_SUCCESS':
             return {
                 ...state,
                 shouldReload: false,
                 selectedUser: action.payload.data,
-                errors:[]
+                errors: []
             }
         case 'EDIT_USER_SUCCESS':
             return {
                 ...state,
                 shouldReload: true,
                 selectedUser: {},
-                errors:[]
+                errors: [],
+                isSuccess: true,
             };
         default:
             return state;
