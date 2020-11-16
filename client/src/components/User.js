@@ -21,10 +21,7 @@ const EditUserSchema = Yup.object().shape({
     userName: Yup.string()
         .min(3, 'Too Short!')
         .max(64, 'Too Long!')
-        .required('Hey input the value!'),
-    password: Yup.string()
-        .min(3, 'Too Short!')
-        .max(64, 'Too Long!')
+        .required('Hey input the value!'),    
 });
 
 export const UserCreate = () => {
@@ -128,11 +125,15 @@ export const UserEdit = () => {
 
     let { id } = useParams();
 
+    const roleContext = useSelector(state => {
+        return state.roleContext;
+    });
+
     const usersContext = useSelector(state => state.usersContext);
 
     useEffect(() => {
         console.log('usersContext', usersContext);
-
+        dispatch({ type: "FETCH_ROLE" });
         dispatch({ type: "FETCH_USER_DETAIL", payload: id });
 
         if (usersContext.isSuccess)
@@ -191,6 +192,18 @@ export const UserEdit = () => {
                                 <label htmlFor="phoneNumber" className="col-sm-2 col-form-label">Phone number</label>
                                 <Field className="col-sm-8 col-form-label" type="text" name="phoneNumber" />
                                 <ErrorMessage className="col-sm-2 col-form-label text-danger" name="phoneNumber" component="div" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="roleId" className="col-sm-2 col-form-label">Roles</label>
+                                <Field as="select" name="roleId" className="col-sm-8">
+                                    <option value="" key=""></option>
+                                    {
+                                        roleContext.roleList.map(({ id, name }) => {
+                                            return <option value={id} key={id}>{name}</option>;
+                                        })
+                                    }
+                                </Field>
+                                <ErrorMessage className="col-sm-2 col-form-label text-danger" name="name" component="div" />
                             </div>
                             <div className="form-group row">
                                 <label htmlFor="password" className="col-sm-2 col-form-label">Current password</label>

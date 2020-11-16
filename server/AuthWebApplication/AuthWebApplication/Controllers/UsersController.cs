@@ -43,6 +43,12 @@ namespace AuthWebApplication.Controllers
                 return NotFound();
             }
 
+            var applicationUserRole = await _context.ApplicationUserRoles.FirstOrDefaultAsync(x => x.UserId == applicationUser.Id);
+            if (applicationUserRole != null)
+            {
+                applicationUser.RoleId = applicationUserRole.RoleId;
+            }
+
             return applicationUser;
         }
 
@@ -58,6 +64,12 @@ namespace AuthWebApplication.Controllers
 
             bool modelIsInvalid = await ValidateUpdateModel(applicationUser);
             if (modelIsInvalid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            bool isValidRole = await ValidateRole(applicationUser.RoleId);
+            if (!isValidRole)
             {
                 return BadRequest(ModelState);
             }
@@ -85,6 +97,32 @@ namespace AuthWebApplication.Controllers
                     IActionResult actionResult = GetErrorResult(passwordUpdateResult);
                     return actionResult;
                 }
+            }
+
+            try
+            {
+                var applicationUserRole = await _context.ApplicationUserRoles.FirstOrDefaultAsync(x => x.UserId == applicationUser.Id);
+                if (applicationUserRole == null)
+                {
+                    applicationUserRole = new ApplicationUserRole()
+                    {
+                        RoleId = applicationUser.RoleId,
+                        UserId = applicationUser.Id,
+                    };
+
+                    await _context.ApplicationUserRoles.AddAsync(applicationUserRole);
+                }
+                else
+                {
+                    applicationUserRole.RoleId = applicationUser.RoleId;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("roleId", ex.Message);
+                return BadRequest(ModelState);
             }
 
             return CreatedAtAction("GetApplicationUser", new { id = applicationUser.Id }, applicationUser);
@@ -172,13 +210,38 @@ namespace AuthWebApplication.Controllers
                 ModelState.AddModelError("email", "Duplicate Email");
             }
 
-            if (!(string.IsNullOrEmpty(applicationUser.Password) && string.IsNullOrEmpty(applicationUser.NewPassword)))
+            if (!(string.IsNullOrWhiteSpace(applicationUser.Password) && string.IsNullOrWhiteSpace(applicationUser.NewPassword)))
             {
                 isInvalid = true;
-                ModelState.AddModelError("password","Current password and New password both must be provided to change the password");
+                ModelState.AddModelError("password", "Current password and New password both must be provided to change the password");
+            }
+
+            if (string.IsNullOrWhiteSpace(applicationUser.RoleId))
+            {
+                isInvalid = true;
+                ModelState.AddModelError("roleId", "Role id must be provided");
             }
 
             return isInvalid;
+        }
+
+        private async Task<bool> ValidateRole(string roleId)
+        {
+            var applicationRole = await _context.ApplicationRoles.FirstOrDefaultAsync(x => x.Id == roleId);
+            bool isValid = true;
+            if (applicationRole == null)
+            {
+                isValid = false;
+                ModelState.AddModelError("roleId", "Role doesn't exist");
+            }
+
+            if (applicationRole.Name == "SuperAdmin")
+            {
+                isValid = false;
+                ModelState.AddModelError("roleId", "Role is forbidden");
+            }
+
+            return isValid;
         }
 
         // DELETE: api/Users/5

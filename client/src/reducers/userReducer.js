@@ -28,7 +28,13 @@ export default (state = initialState, action) => {
         case Constants.LOGIN_SUCCESS:
             const data = action.payload.data;
             localStorage.setItem('data', JSON.stringify(data));
-            return getUser(state, data);      
+            return getUser(state, data);
+        case Constants.LOGIN_FAILURE:
+            return {
+                ...state,
+                error: action.payload.data,
+                isSuccess: false
+            };
         case Constants.LOGOUT_REQUEST_SUCCESS:
             localStorage.removeItem('data');
             return {

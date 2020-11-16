@@ -25,7 +25,10 @@ namespace AuthWebApplication.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationRole>>> GetApplicationRoles()
         {
-            return await _context.ApplicationRoles.ToListAsync();
+            List<ApplicationRole> roles = await _context.ApplicationRoles.ToListAsync();
+            ApplicationRole applicationRole = roles.FirstOrDefault(x => x.Name == "SuperAdmin");
+            roles.Remove(applicationRole);
+            return roles;
         }
 
         // GET: api/ApplicationRoles/5

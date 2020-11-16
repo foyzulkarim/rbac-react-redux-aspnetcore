@@ -35,6 +35,9 @@ namespace AuthWebApplication.Models
         [NotMapped]
         public string NewPassword { get; set; }
 
+        [NotMapped]
+        public string RoleId { get; set; }
+
         public void BuildIndices(ModelBuilder builder)
         {
             builder.BuildIndex<ApplicationUser>();
