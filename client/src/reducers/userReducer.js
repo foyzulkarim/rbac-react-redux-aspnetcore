@@ -29,14 +29,12 @@ export default (state = initialState, action) => {
             const data = action.payload.data;
             localStorage.setItem('data', JSON.stringify(data));
             return getUser(state, data);
-        // return {
-        //     ...state,
-        //     isAuthenticated: true,
-        //     user: { username: data.userName },
-        //     token: data.access_token,
-        //     role: data.role,
-        //     resources: data.resources
-        // };
+        case Constants.LOGIN_FAILURE:
+            return {
+                ...state,
+                error: action.payload.data,
+                isSuccess: false
+            };
         case Constants.LOGOUT_REQUEST_SUCCESS:
             localStorage.removeItem('data');
             return {

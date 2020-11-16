@@ -72,9 +72,8 @@ namespace AuthWebApplication.Controllers
             if (user.IsActive == false)
             {
                 logger.LogError("Invalid login attempt for {UserName}", user.UserName);
-                return BadRequest("User is Deactivated");
+                return BadRequest("User is deactivated");
             }
-
 
             var userRoles = securityDb.ApplicationUserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
             var roles = securityDb.ApplicationRoles.Where(x => userRoles.Contains(x.Id)).Select(x => (dynamic)new { x.Id, x.Name }).ToList();

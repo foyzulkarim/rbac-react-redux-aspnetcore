@@ -8,6 +8,7 @@ export function* login({ payload }) {
         yield put({ type: 'LOGIN_REQUEST_SUCCESS', payload: output });
     } catch (error) {
         console.log('login error', error);
+        yield put({ type: Constants.LOGIN_FAILURE, payload: error });
     }
 }
 
@@ -20,7 +21,7 @@ export function* logout({ payload }) {
         let output = yield call(api.logout, payload);
         yield put({ type: 'LOGOUT_REQUEST_SUCCESS', payload: output });
     } catch (error) {
-        console.log('login error', error);
+        console.log('login error', error);        
     }
 }
 
