@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Threading;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,22 +20,13 @@ namespace WebApplication2.Attributes
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var authServerUrl = Constants.AuthServer;
             var resource = context.HttpContext.Request.Path.Value;
-            var url = $"{authServerUrl}/api/AuthorizeToken?resource={resource}";
-
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(context.HttpContext.Request.Headers["Authorization"].ToString());
-            
+            var token = context.HttpContext.Request.Headers["Authorization"].ToString();
             try
             {
-                var httpResponseMessage = client.GetAsync(url).GetAwaiter().GetResult();
-                httpResponseMessage.EnsureSuccessStatusCode();
+                HttpAuthorization(resource, token);
 
-                using var channel = GrpcChannel.ForAddress("https://localhost:5005");
-                var gClient = new Greeter.GreeterClient(channel);
-                var reply = gClient.SayHelloAsync(new HelloRequest { Name = httpResponseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult() }).GetAwaiter().GetResult();
-                var replyMessage = reply.Message;
+               // GrpcAuthorization(token, resource);
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -47,6 +40,73 @@ namespace WebApplication2.Attributes
             catch (Exception e)
             {
                 context.Result = new UnauthorizedResult();
+            }
+
+        }
+
+        private static string HttpAuthorization(string resource, string token)
+        {
+            var client = Factory.HttpClient;
+            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(token);
+            var url = $"{Constants.AuthServer}/api/AuthorizeToken?resource={resource}";
+            var httpResponseMessage = client.GetAsync(url).GetAwaiter().GetResult();
+            httpResponseMessage.EnsureSuccessStatusCode();
+            return token;
+        }
+
+
+        private static void GrpcAuthorization(string token, string resource)
+        {
+            Greeter.GreeterClient gClient = Factory.GreeterClient;
+
+            var headers = new Metadata
+            {
+                { "Authorization", $"{token}" }
+            };
+
+            var reply = gClient.SayHelloAsync(new HelloRequest { Name = resource }, headers).GetAwaiter().GetResult();
+            var replyMessage = reply.Message;
+            if (!string.IsNullOrWhiteSpace(replyMessage))
+            {
+                throw replyMessage switch
+                {
+                    "Forbid" => new HttpRequestException(),
+                    _ => new UnauthorizedAccessException()
+                };
+            }
+        }
+
+        public static class Factory
+        {
+            private static Greeter.GreeterClient _greeterClient;
+
+            private static HttpClient _httpClient;
+
+            public static Greeter.GreeterClient GreeterClient
+            {
+                get
+                {
+                    if (_greeterClient == null)
+                    {
+                        GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:5005");
+                        _greeterClient = new Greeter.GreeterClient(channel);
+                    }
+
+                    return _greeterClient;
+                }
+            }
+
+            public static HttpClient HttpClient
+            {
+                get
+                {
+                    if (_httpClient == null)
+                    {
+                        _httpClient = new HttpClient();
+                    }
+
+                    return _httpClient;
+                }
             }
         }
     }

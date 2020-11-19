@@ -7,7 +7,7 @@ import PermissionReducer from "./permissionReducer";
 import UsersReducer from "./usersReducer";
 
 const rootReducer = combineReducers({
-    posts: PostsReducer,
+    postContext: PostsReducer,
     userContext: UserReducer,
     usersContext: UsersReducer,
     resourceContext: ResourceReducer,

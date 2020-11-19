@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AuthLibrary.Services;
 using AuthWebApplication.Models.Db;
 using AuthWebApplication.Services;
 using AuthWebApplication.Utilities;
