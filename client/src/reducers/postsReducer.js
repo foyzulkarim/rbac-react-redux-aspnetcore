@@ -2,7 +2,8 @@ const initialState = {
     postList: [],
     selectedPost: {},
     selectedComments: [],
-    notificationText: ''
+    notificationText: '',
+    shouldReload: false
 };
 
 export default (state = initialState, action) => {

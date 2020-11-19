@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AuthWebApplication.Models.ViewModels
+﻿namespace AuthWebApplication.Models.ViewModels
 {
+    public static class Extensions
+    {
+        public static dynamic GetMinimalViewModel(this ApplicationPermission permission)
+        {
+            return new 
+            {
+                Name = permission.Resource.Name,
+                IsAllowed = permission.IsAllowed.ToString(),
+                IsDisabled = permission.IsDisabled.ToString()
+            };
+        }
+    }
+
     public class ApplicationPermissionViewModel
     {
         public ApplicationPermissionViewModel()
         {
-            
+
         }
 
         public ApplicationPermissionViewModel(ApplicationPermission permission)

@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthWebApplication.Utilities
+namespace AuthLibrary.Services
 {
-    public class JwtIssuerOptions_Obs
+    public class JwtIssuerOptions
     {
         /// <summary>
         /// 4.1.1.  "iss" (Issuer) Claim - The "iss" (issuer) claim identifies the principal that issued the JWT.
