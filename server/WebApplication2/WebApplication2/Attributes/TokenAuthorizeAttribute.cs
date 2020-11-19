@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -28,6 +29,11 @@ namespace WebApplication2.Attributes
             {
                 var httpResponseMessage = client.GetAsync(url).GetAwaiter().GetResult();
                 httpResponseMessage.EnsureSuccessStatusCode();
+
+                using var channel = GrpcChannel.ForAddress("https://localhost:5005");
+                var gClient = new Greeter.GreeterClient(channel);
+                var reply = gClient.SayHelloAsync(new HelloRequest { Name = httpResponseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult() }).GetAwaiter().GetResult();
+                var replyMessage = reply.Message;
             }
             catch (HttpRequestException httpRequestException)
             {

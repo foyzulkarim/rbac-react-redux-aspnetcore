@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "AuthGrpcService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "http://localhost:5004;https://localhost:5005"
+    }
+  }
+}
