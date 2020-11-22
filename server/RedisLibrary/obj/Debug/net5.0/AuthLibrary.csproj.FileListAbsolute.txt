@@ -1,0 +1,12 @@
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.csprojAssemblyReference.cache
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.AssemblyInfoInputs.cache
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.AssemblyInfo.cs
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.csproj.CoreCompileInputs.cache
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\bin\Debug\net5.0\AuthLibrary.deps.json
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\bin\Debug\net5.0\AuthLibrary.dll
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\bin\Debug\net5.0\ref\AuthLibrary.dll
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\bin\Debug\net5.0\AuthLibrary.pdb
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.dll
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\ref\AuthLibrary.dll
+C:\github\my\react-redux-jwt-auth\server\RedisLibrary\obj\Debug\net5.0\AuthLibrary.pdb
