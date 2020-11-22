@@ -356,8 +356,12 @@ export const Posts = () => {
   let dispatch = useDispatch();
 
   const posts = useSelector(state => {
-    return state.posts.postList;
+    return state.postContext.postList;
   });
+
+  const postContext = useSelector(state => {
+    return state.postContext;
+  })
 
   let fetchData = () => {
     dispatch({ type: "FETCH_POSTS" });
@@ -367,6 +371,12 @@ export const Posts = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   if (postContext.shouldReload || posts.length === 0) {
+  //     fetchData();
+  //   }
+  // }, [postContext.shouldReload]);
 
   return (
     <div className="container">

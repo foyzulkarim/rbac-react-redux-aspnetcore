@@ -4,10 +4,12 @@ import UserReducer from "./userReducer";
 import ResourceReducer from "./resourceReducer";
 import RoleReducer from "./roleReducer";
 import PermissionReducer from "./permissionReducer";
+import UsersReducer from "./usersReducer";
 
 const rootReducer = combineReducers({
-    posts: PostsReducer,
+    postContext: PostsReducer,
     userContext: UserReducer,
+    usersContext: UsersReducer,
     resourceContext: ResourceReducer,
     roleContext: RoleReducer,
     permissionContext: PermissionReducer

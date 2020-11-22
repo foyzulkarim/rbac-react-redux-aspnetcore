@@ -40,7 +40,7 @@ export const Register = () => {
     return (shouldRedirect) ? <Redirect to={{ pathname: '/' }} /> :
         <>
             <div className="col-md-6 col-md-offset-3">
-                <h2>Login</h2>
+                <h2>Register</h2>
                 {userContext.error &&
                     <div className="alert alert-danger  alert-dismissible fade show" role="alert">
                         {userContext.error.message}

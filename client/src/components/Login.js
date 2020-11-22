@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import { Redirect, useHistory } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,7 +13,6 @@ export const Login = () => {
         dispatch({
             type: Constants.LOGIN_REQUEST, payload: data
         })
-        history.push('/');
     }
 
     const onSubmit = data => {
@@ -23,6 +22,12 @@ export const Login = () => {
     const userContext = useSelector(state => {
         return state.userContext;
     });
+
+    useEffect(() => {
+        console.log('userContext', userContext);
+        if (userContext.isSuccess)
+            history.push('/');
+    }, [userContext.isSuccess]);
 
     return (userContext.isAuthenticated) ? <Redirect to={{ pathname: '/' }} /> :
         <>
@@ -41,6 +46,10 @@ export const Login = () => {
                     </div>
                     <div className="form-group">
                         <input type="submit" className="btn btn-primary" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="error"></label>                        
+                        <span className="col-form-label text-danger">{userContext.error}</span>
                     </div>
                 </form>
             </div>

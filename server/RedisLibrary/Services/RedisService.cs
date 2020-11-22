@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AuthWebApplication.Models;
-using AuthWebApplication.Models.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StackExchange.Redis;
+using StackExchange.Redis; 
 
-namespace AuthWebApplication.Services
+namespace AuthLibrary.Services
 {
     public class RedisService
     {
@@ -46,24 +43,21 @@ namespace AuthWebApplication.Services
             logger.LogDebug("Connected to Redis");
         }
 
-        public async Task<bool> Set(string key, ApplicationUserToken token, object o, TimeSpan expiry)
+        public async Task<bool> Set(string key, TimeSpan expiry, string tokenJti, string resources)
         {
             var db = _redis.GetDatabase();
-            var jwt = (o as dynamic);
-            var permissionViewModels = (jwt.resources as List<ApplicationPermissionViewModel>);
-            var resources = JsonConvert.SerializeObject(permissionViewModels);
             var redisValue = await db.StringGetAsync(key);
             IList<string> jtiList = new List<string>();
             if (redisValue.IsNullOrEmpty)
             {
-                var jti = token.Jti as string;
+                var jti = tokenJti;
                 jtiList.Add(jti);
             }
             else
             {
                 var dbValue = (dynamic) JsonConvert.DeserializeObject(redisValue.ToString());
                 var array = ((dbValue as dynamic).jtis as dynamic) as JArray;
-                array.Add(token.Jti);
+                array.Add(tokenJti);
                 jtiList = array.ToObject<List<string>>();
             }
 
@@ -100,9 +94,9 @@ namespace AuthWebApplication.Services
             foreach (var value in redisValues)
             {
                 var s = value.ToString();
-                var o = JsonConvert.DeserializeObject<List<ApplicationPermissionViewModel>>(s);
+                //var o = JsonConvert.DeserializeObject<List<ApplicationPermissionViewModel>>(s);
 
-                values.Add(o);
+                values.Add(s);
             }
 
             return values;

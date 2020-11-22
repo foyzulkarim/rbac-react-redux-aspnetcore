@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthWebApplication", "..\Au
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication2", "..\WebApplication2\WebApplication2\WebApplication2.csproj", "{601443BD-D8F7-4982-9AB7-E3D99D308477}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthGrpcService", "..\AuthGrpcService\AuthGrpcService.csproj", "{D5999D5A-48B2-464C-A704-2E85FA7B227A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthLibrary", "..\RedisLibrary\AuthLibrary.csproj", "{B4DF71A8-2693-4048-849B-C23710AB92D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{601443BD-D8F7-4982-9AB7-E3D99D308477}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5999D5A-48B2-464C-A704-2E85FA7B227A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5999D5A-48B2-464C-A704-2E85FA7B227A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5999D5A-48B2-464C-A704-2E85FA7B227A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5999D5A-48B2-464C-A704-2E85FA7B227A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4DF71A8-2693-4048-849B-C23710AB92D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4DF71A8-2693-4048-849B-C23710AB92D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4DF71A8-2693-4048-849B-C23710AB92D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4DF71A8-2693-4048-849B-C23710AB92D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

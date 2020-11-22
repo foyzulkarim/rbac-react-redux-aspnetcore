@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AuthLibrary.Services;
 using AuthWebApplication.Models.ViewModels;
 using AuthWebApplication.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,9 +23,11 @@ namespace AuthWebApplication.Controllers
     public class AuthorizeTokenController : ControllerBase
     {
         private RedisService redisService;
+        private readonly ILogger<AuthorizeTokenController> logger;
 
-        public AuthorizeTokenController(RedisService redisService)
+        public AuthorizeTokenController(ILogger<AuthorizeTokenController> logger,RedisService redisService)
         {
+            this.logger = logger;
             this.redisService = redisService;
         }
 

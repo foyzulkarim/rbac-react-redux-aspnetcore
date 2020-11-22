@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AuthLibrary.Services;
 using AuthWebApplication.Models;
 using AuthWebApplication.Models.Db;
 using AuthWebApplication.Models.ViewModels;
@@ -72,12 +73,19 @@ namespace AuthWebApplication.Controllers
             if (user.IsActive == false)
             {
                 logger.LogError("Invalid login attempt for {UserName}", user.UserName);
-                return BadRequest("User is Deactivated");
+                return BadRequest("User is deactivated");
             }
 
-
             var userRoles = securityDb.ApplicationUserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
-            var roles = securityDb.ApplicationRoles.Where(x => userRoles.Contains(x.Id)).Select(x => (dynamic)new { x.Id, x.Name }).ToList();
+            var roles = securityDb.ApplicationRoles.Where(x => userRoles.Contains(x.Id)).Select(x => x.Id).ToList();
+
+            //List<ApplicationPermissionViewModel> resources = new List<ApplicationPermissionViewModel>();
+            List<dynamic> resources = new List<dynamic>();
+            if (roles != null && roles.Count > 0)
+            {
+                resources = securityDb.Permissions.Include(x => x.Resource).Include(x => x.Role).Where(x => roles.Contains(x.RoleId) && x.IsAllowed).Select(x => x.GetMinimalViewModel())
+                    .ToList();
+            }
 
             dynamic jwt = await Tokens.GenerateJwt(
                 identity,
@@ -85,8 +93,7 @@ namespace AuthWebApplication.Controllers
                 jwtOptions,
                 user,
                 roles,
-                new JsonSerializerSettings { Formatting = Formatting.None },
-                securityDb);
+                resources);
 
             var jtiClaim = identity.Claims.First(x => x.Type == JwtRegisteredClaimNames.Jti);
 
@@ -101,7 +108,7 @@ namespace AuthWebApplication.Controllers
 
             await securityDb.UserTokens.AddAsync(token);
             await securityDb.SaveChangesAsync();
-            await redisService.Set($"{token.Name}", token, jwt, jwtOptions.ValidFor);
+            await redisService.Set(token.Name, jwtOptions.ValidFor, token.Jti, JsonConvert.SerializeObject(resources));
             return Ok(jwt);
         }
 
