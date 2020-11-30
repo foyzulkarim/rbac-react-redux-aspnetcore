@@ -24,9 +24,11 @@ namespace WebApplication2.Attributes
             var token = context.HttpContext.Request.Headers["Authorization"].ToString();
             try
             {
-                HttpAuthorization(resource, token);
+               HttpAuthorization(resource, token);
 
                // GrpcAuthorization(token, resource);
+               
+               //GoAuthorization(context, resource);
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -42,6 +44,18 @@ namespace WebApplication2.Attributes
                 context.Result = new UnauthorizedResult();
             }
 
+        }
+
+        private void GoAuthorization(AuthorizationFilterContext context, string resource)
+        {
+            var client = Factory.HttpClient;
+            var user = context.HttpContext.User.Identity.Name;
+            var claimsIdentity = context.HttpContext.User.Identities.First() as ClaimsIdentity;
+            var claim = claimsIdentity.Claims.First(x => x.Type == JwtRegisteredClaimNames.Jti);
+            var jti = claim.Value;
+            var url = $"http://localhost:8080/api/AuthorizeToken?user={user}&resource={resource}&jti={jti}";
+            var httpResponseMessage = client.GetAsync(url).GetAwaiter().GetResult();
+            httpResponseMessage.EnsureSuccessStatusCode();
         }
 
         private static string HttpAuthorization(string resource, string token)

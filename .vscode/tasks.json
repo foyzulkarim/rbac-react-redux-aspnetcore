@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build (AuthWebApplication)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -14,7 +14,19 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "build (WebApplication2)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/server/WebApplication2/WebApplication2/WebApplication2.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish (AuthWebApplication)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -26,7 +38,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch",
+            "label": "watch (AuthWebApplication)",
             "command": "dotnet",
             "type": "process",
             "args": [

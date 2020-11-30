@@ -8,7 +8,7 @@
             "name": ".NET Core Launch (auth)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "build (AuthWebApplication)",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/server/AuthWebApplication/AuthWebApplication/bin/Debug/net5.0/AuthWebApplication.dll",
             "args": [],
@@ -20,7 +20,8 @@
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:5001;http://localhost:5000"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -30,7 +31,7 @@
             "name": ".NET Core Launch (webapp)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "build (WebApplication2)",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/server/WebApplication2/WebApplication2/bin/Debug/net5.0/WebApplication2.dll",
             "args": [],
@@ -42,17 +43,12 @@
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5002;https://localhost:5003"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
         }
     ]
 }
