@@ -43,7 +43,7 @@ namespace AuthLibrary.Services
             logger.LogDebug("Connected to Redis");
         }
 
-        public async Task<bool> Set(string key, TimeSpan expiry, string tokenJti, string resources)
+        public async Task<bool> Set(string key, TimeSpan expiry, string tokenJti, List<dynamic> resources)
         {
             var db = _redis.GetDatabase();
             var redisValue = await db.StringGetAsync(key);

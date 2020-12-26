@@ -24,7 +24,7 @@ namespace WebApplication2.Attributes
             var token = context.HttpContext.Request.Headers["Authorization"].ToString();
             try
             {
-               HttpAuthorization(resource, token);
+               HttpAuthorization(context, resource);
 
                // GrpcAuthorization(token, resource);
                
@@ -58,18 +58,21 @@ namespace WebApplication2.Attributes
             httpResponseMessage.EnsureSuccessStatusCode();
         }
 
-        private static string HttpAuthorization(string resource, string token)
+        private string HttpAuthorization(AuthorizationFilterContext context, string resource)
         {
             var client = Factory.HttpClient;
-            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(token);
-            var url = $"{Constants.AuthServer}/api/AuthorizeToken?resource={resource}";
+            var user = context.HttpContext.User.Identity.Name;
+            var claimsIdentity = context.HttpContext.User.Identities.First() as ClaimsIdentity;
+            var claim = claimsIdentity.Claims.First(x => x.Type == JwtRegisteredClaimNames.Jti);
+            var jti = claim.Value;            
+            var url = $"{Constants.AuthServer}/api/AuthorizeToken?user={user}&resource={resource}&jti={jti}";
             var httpResponseMessage = client.GetAsync(url).GetAwaiter().GetResult();
             httpResponseMessage.EnsureSuccessStatusCode();
-            return token;
+            return jti;
         }
 
 
-        private static void GrpcAuthorization(string token, string resource)
+        private void GrpcAuthorization(string token, string resource)
         {
             Greeter.GreeterClient gClient = Factory.GreeterClient;
 
